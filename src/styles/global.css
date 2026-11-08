@@ -33,7 +33,7 @@ header{position:sticky;top:0;z-index:1100;background:color-mix(in srgb,var(--pap
 
 /* hero */
 .hero{padding:72px 0 56px;border-bottom:1px solid var(--line)}
-@media(min-width:900px){.hero{padding:120px 0 104px;min-height:calc(100vh - 64px);display:flex;align-items:center}.hero>.wrap{width:100%}}
+@media(min-width:900px){.hero{padding:88px 0 64px}}
 .eyebrow{font-size:14px;font-weight:500;color:var(--ink-3);margin:0 0 14px;letter-spacing:0;text-transform:none}
 h1{font-size:clamp(38px,5.2vw,64px);line-height:1.04;letter-spacing:-.03em;font-weight:700;margin:0 0 28px;max-width:22ch}
 .lead{font-size:clamp(17px,1.8vw,21px);color:var(--ink-2);max-width:62ch;margin:0 0 40px}
@@ -46,7 +46,7 @@ h1{font-size:clamp(38px,5.2vw,64px);line-height:1.04;letter-spacing:-.03em;font-
 @media(min-width:900px){.hero .wrap{grid-template-columns:1.1fr .9fr;gap:64px}}
 .fig{display:block;width:100%;height:auto}
 .fig *{vector-effect:non-scaling-stroke}
-.hero-fig{max-width:500px;justify-self:end}
+.hero-fig{max-width:460px;justify-self:end}
 .glyph{width:28px;height:28px;display:block;margin-bottom:16px}
 .sec-fig{margin:0 0 28px}
 .sec-fig svg{width:min(100%,520px);height:auto;display:block}
