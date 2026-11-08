@@ -59,22 +59,21 @@
     // градиентный спуск с моментом и шумом: сначала к седлу по x, потом уход по y
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let x = 0, y = 0, vx = 0, vy = 0, step = 0;
-    let trailPts: string[] = [], losses: number[] = [];
-    const LR = 0.035, MOM = 0.86, NOISE = 0.0035, MAX_STEPS = 260;
+    let trailPts: string[] = [], losses: number[] = [], ema = 0;
+    const LR = 0.022, MOM = 0.9, NOISE = 0.002, MAX_STEPS = 340, TICK_MS = 46;
 
     function reset() {
       x = 1.15; y = (Math.random() - 0.5) * 0.06; vx = 0; vy = 0; step = 0;
-      trailPts = []; losses = [];
+      trailPts = []; losses = []; ema = f(x, y);
     }
     function draw() {
       const [bx, by] = pt(x, y);
       ball.setAttribute("cx", bx.toFixed(1)); ball.setAttribute("cy", by.toFixed(1));
       trail.setAttribute("points", trailPts.join(" "));
-      // кривая лосса: 150px по ширине, 64px по высоте, от max к min
+      // кривая лосса: фиксированная шкала, кривая выходит на плато выше оси, а не в ноль
       if (losses.length > 1) {
-        const lo = Math.min(...losses), hi = Math.max(...losses), span = Math.max(hi - lo, 1e-6);
-        const w = 150 / MAX_STEPS;
-        lossLine.setAttribute("points", losses.map((l, i) => `${(i * w).toFixed(1)},${(64 - ((l - lo) / span) * 60).toFixed(1)}`).join(" "));
+        const LO = -2.4, HI = 1.5, w = 150 / MAX_STEPS;
+        lossLine.setAttribute("points", losses.map((l, i) => `${(i * w).toFixed(1)},${(64 - ((l - LO) / (HI - LO)) * 60).toFixed(1)}`).join(" "));
       }
     }
     function tick() {
@@ -85,10 +84,11 @@
       x += vx; y += vy; step++;
       const [bx, by] = pt(x, y);
       trailPts.push(`${bx.toFixed(1)},${by.toFixed(1)}`);
-      losses.push(f(x, y));
+      ema = 0.85 * ema + 0.15 * f(x, y);
+      losses.push(ema);
       draw();
       if (Math.abs(y) > R || Math.abs(x) > R || step > MAX_STEPS) {
-        setTimeout(() => { reset(); }, 900);
+        setTimeout(() => { reset(); }, 1600);
       }
     }
     reset();
@@ -98,7 +98,7 @@
     } else {
       let last = 0;
       const loop = (t: number) => {
-        if (t - last > 28) { last = t; if (!(Math.abs(y) > R || Math.abs(x) > R || step > MAX_STEPS)) tick(); }
+        if (t - last > TICK_MS) { last = t; if (!(Math.abs(y) > R || Math.abs(x) > R || step > MAX_STEPS)) tick(); }
         requestAnimationFrame(loop);
       };
       requestAnimationFrame(loop);
