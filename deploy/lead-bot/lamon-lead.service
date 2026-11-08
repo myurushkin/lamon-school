@@ -1,0 +1,19 @@
+[Unit]
+Description=lamon.school lead form -> Telegram
+After=network.target
+
+[Service]
+Type=simple
+User=lending
+EnvironmentFile=/etc/lamon/lead.env
+ExecStart=/usr/bin/python3 /opt/lamon/lead_server.py
+Restart=always
+RestartSec=3
+StateDirectory=lamon
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/lamon
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

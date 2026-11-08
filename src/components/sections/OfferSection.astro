@@ -12,6 +12,7 @@
         <label>Как к вам обращаться
           <input name="name" type="text" required autocomplete="name" placeholder="Имя">
         </label>
+        <input name="site" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;width:0;opacity:0">
         <label>Телефон
           <input name="phone" id="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" maxlength="18">
         </label>
@@ -60,17 +61,31 @@
     }
   });
   const form = document.getElementById('form') as HTMLFormElement | null;
-  form?.addEventListener('submit', (ev)=>{
+  form?.addEventListener('submit', async (ev)=>{
     ev.preventDefault();
     const f = new FormData(form);
-    const name = String(f.get('name')||'').trim(), phone = String(f.get('phone')||'').trim();
+    const name = String(f.get('name')||'').trim(), phone = String(f.get('phone')||'').trim(), site = String(f.get('site')||'');
     const digits = phone.replace(/\D/g,'');
     const phoneEl = document.getElementById('phone') as HTMLInputElement | null;
     phoneEl?.setCustomValidity(digits.length === 11 ? '' : 'Введите номер полностью: +7 (XXX) XXX-XX-XX');
     if(!name || !phone || digits.length !== 11){ form.reportValidity(); return; }
-    const body = [`Имя: ${name}`, `Телефон: ${phone}`].join('\n');
-    const ok = document.getElementById('ok'); if(ok) ok.style.display = 'block';
-    window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent('Запись на звонок: '+name)}&body=${encodeURIComponent(body)}`;
+    const btn = form.querySelector('button[type=submit]') as HTMLButtonElement | null;
+    const ok = document.getElementById('ok');
+    if(btn){ btn.disabled = true; btn.textContent = 'Отправляем…'; }
+    try {
+      const r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, site }) });
+      const data = await r.json().catch(() => ({}));
+      if(!r.ok || !data.ok) throw new Error(data.error || 'Не удалось отправить');
+      if(ok){ ok.textContent = 'Спасибо! Заявка отправлена — мы свяжемся с вами в течение двух дней.'; ok.style.display = 'block'; }
+      form.reset();
+      if(btn){ btn.textContent = 'Заявка отправлена'; }
+    } catch (e) {
+      // запасной путь: письмо через почтовый клиент
+      if(ok){ ok.textContent = 'Не получилось отправить автоматически. Откроем письмо — просто нажмите «Отправить».'; ok.style.display = 'block'; }
+      if(btn){ btn.disabled = false; btn.textContent = 'Записаться на звонок'; }
+      const body = [`Имя: ${name}`, `Телефон: ${phone}`].join('\n');
+      window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent('Запись на звонок: '+name)}&body=${encodeURIComponent(body)}`;
+    }
   });
 </script>
 
