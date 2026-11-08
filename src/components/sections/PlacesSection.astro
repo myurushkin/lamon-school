@@ -61,7 +61,8 @@ const YKEY = import.meta.env.PUBLIC_YMAPS_KEY ?? "";
     function initLeaflet(){
       if(el.dataset.inited==='L') return; el.dataset.inited='L';
       loadScript('/vendor/leaflet/leaflet.js', function(){
-        var map = L.map(el, { scrollWheelZoom:false, attributionControl:true, minZoom: 11, maxZoom: 18, maxBounds: [[46.9,39.2],[47.5,40.1]], maxBoundsViscosity: 1 });
+        var map = L.map(el, { scrollWheelZoom:false, attributionControl:false, minZoom: 11, maxZoom: 18, maxBounds: [[46.9,39.2],[47.5,40.1]], maxBoundsViscosity: 1 });
+        L.control.attribution({ prefix: false }).addTo(map);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
         var group = pts.map(function(pt){
           var icon = L.divIcon({ className:'pin', html:'<span>'+pt.n+'</span>', iconSize:[30,30], iconAnchor:[15,15] });
