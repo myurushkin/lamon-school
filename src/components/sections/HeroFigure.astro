@@ -8,15 +8,6 @@
   <polyline data-trail stroke="#000" stroke-opacity=".7" stroke-width="1.6" stroke-dasharray="2 4" points=""/>
   <circle data-ball r="6" fill="#000" stroke="#fff" stroke-width="1.5"/>
   <circle data-saddle-pt r="3" fill="#fff" stroke="#000" stroke-width="1.2"/>
-  <g data-loss transform="translate(142 392)">
-    <line x1="0" y1="56" x2="180" y2="56"/>
-    <polyline points="176,53 180,56 176,59"/>
-    <line x1="0" y1="0" x2="0" y2="56"/>
-    <polyline points="-3,4 0,0 3,4"/>
-    <polyline data-loss-line stroke="#1d4ed8" stroke-width="1.6" points=""/>
-    <text x="6" y="4" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#000" stroke="none">loss</text>
-    <text x="180" y="68" text-anchor="end" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#000" stroke="none">итерация</text>
-  </g>
 </svg>
 
 <script>
@@ -26,7 +17,6 @@
     const trail = svg.querySelector<SVGPolylineElement>("[data-trail]")!;
     const ball = svg.querySelector<SVGCircleElement>("[data-ball]")!;
     const saddlePt = svg.querySelector<SVGCircleElement>("[data-saddle-pt]")!;
-    const lossLine = svg.querySelector<SVGPolylineElement>("[data-loss-line]")!;
 
     // поверхность и проекция
     const R = 1.4;                        // граница по x и y
@@ -34,7 +24,7 @@
     const f = (x: number, y: number) => x * x - y * y + 0.5 * y ** 4;
     const F_MIN = -0.5;
     // поворот вокруг вертикали на A, наклон камеры E (взгляд сверху-сбоку)
-    const CX = 232, CY = 176, S = 132, K = 62;
+    const CX = 230, CY = 288, S = 112, K = 52;
     const A = 0.55, E = 0.62;
     const cA = Math.cos(A), sA = Math.sin(A), sE = Math.sin(E), cE = Math.cos(E);
     const P = (x: number, y: number, z: number) => {
@@ -82,22 +72,17 @@
     // градиентный спуск с моментом и шумом: сначала к седлу по x, потом уход по y
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let x = 0, y = 0, vx = 0, vy = 0, step = 0;
-    let trailPts: string[] = [], losses: number[] = [], f0 = 1;
+    let trailPts: string[] = [];
     const LR = 0.002, MOM = 0.85, NOISE = 0.0005, NOISE_TAU = 400, MAX_STEPS = 300, TICK_MS = 46;
 
     function reset() {
       x = 1.15; y = (Math.random() < 0.5 ? -1 : 1) * 0.005; vx = 0; vy = 0; step = 0;
-      trailPts = []; losses = []; f0 = f(x, y);
+      trailPts = [];
     }
     function draw() {
       const [bx, by] = pt(x, y);
       ball.setAttribute("cx", bx.toFixed(1)); ball.setAttribute("cy", by.toFixed(1));
       trail.setAttribute("points", trailPts.join(" "));
-      // кривая лосса: идёт вправо по шагам, спадает к нулю с небольшими затухающими осцилляциями
-      if (losses.length > 1) {
-        const w = 180 / MAX_STEPS;
-        lossLine.setAttribute("points", losses.map((l, i) => `${(i * w).toFixed(1)},${(56 - l * 50).toFixed(1)}`).join(" "));
-      }
     }
     function tick() {
       // градиент z = x² − y²: (2x, −2y)
@@ -112,9 +97,6 @@
         trailPts.push(`${bx.toFixed(1)},${by.toFixed(1)}`);
       }
       step++;
-      // лосс = высота точки над минимумом, нормированная к старту: синхронно с движением
-      const L = (f(x, y) - F_MIN) / (f0 - F_MIN);
-      losses.push(Math.max(0, Math.min(1, L)));
       draw();
       if (step >= MAX_STEPS) {
         setTimeout(() => { reset(); }, 1600);
