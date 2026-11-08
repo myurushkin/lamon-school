@@ -18,7 +18,7 @@ header{position:sticky;top:0;z-index:1100;background:color-mix(in srgb,var(--pap
 .nav{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
 .logo{display:flex;align-items:baseline;gap:10px;text-decoration:none}
 .logo b{font-size:22px;letter-spacing:-.02em;font-weight:700}
-.logo span{font-size:13px;color:var(--ink-3)}
+.logo span{font-size:14px;color:var(--ink-2)}
 .nav-links{display:none;gap:22px;font-size:15px}
 .nav-links a{text-decoration:none;color:var(--ink-2)}
 .nav-links a:hover{color:var(--ink)}
@@ -32,21 +32,21 @@ header{position:sticky;top:0;z-index:1100;background:color-mix(in srgb,var(--pap
 .btn-sm{padding:9px 16px;font-size:14px}
 
 /* hero */
-.hero{padding:64px 0 48px;border-bottom:1px solid var(--line)}
-@media(min-width:900px){.hero{padding:80px 0 56px}}
+.hero{padding:72px 0 56px;border-bottom:1px solid var(--line)}
+@media(min-width:900px){.hero{padding:112px 0 88px}}
 .eyebrow{font-size:14px;font-weight:500;color:var(--ink-3);margin:0 0 14px;letter-spacing:0;text-transform:none}
-h1{font-size:clamp(36px,5vw,58px);line-height:1.04;letter-spacing:-.03em;font-weight:700;margin:0 0 24px;max-width:22ch}
-.lead{font-size:clamp(17px,1.8vw,20px);color:var(--ink-2);max-width:62ch;margin:0 0 32px}
+h1{font-size:clamp(38px,5.2vw,64px);line-height:1.04;letter-spacing:-.03em;font-weight:700;margin:0 0 24px;max-width:22ch}
+.lead{font-size:clamp(17px,1.8vw,21px);color:var(--ink-2);max-width:62ch;margin:0 0 36px}
 .cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .hero-meta{margin-top:36px;display:flex;flex-wrap:wrap;gap:10px 28px;font-size:14px;color:var(--ink-3)}
 .hero-meta span::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-right:9px;vertical-align:2px}
 
 /* abstract shapes */
 .hero .wrap{display:grid;gap:40px;align-items:center}
-@media(min-width:900px){.hero .wrap{grid-template-columns:1.3fr .7fr}}
+@media(min-width:900px){.hero .wrap{grid-template-columns:1.15fr .85fr}}
 .fig{display:block;width:100%;height:auto}
 .fig *{vector-effect:non-scaling-stroke}
-.hero-fig{max-width:380px;justify-self:end}
+.hero-fig{max-width:500px;justify-self:end}
 .glyph{width:28px;height:28px;display:block;margin-bottom:16px}
 .sec-fig{margin:0 0 28px}
 .sec-fig svg{width:min(100%,520px);height:auto;display:block}

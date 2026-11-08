@@ -1,0 +1,107 @@
+---
+// Седловая поверхность z = x² − y² в изометрии + точка, которая спускается к седлу,
+// задерживается на нём и уходит вниз по долине. Внизу — кривая лосса по шагам.
+// Чёрные линии на белом, без заливок. При prefers-reduced-motion — статичный кадр.
+---
+<svg class="fig hero-fig saddle" viewBox="0 0 460 460" fill="none" stroke="#000" stroke-width="1.1" aria-hidden="true" data-saddle>
+  <g data-grid></g>
+  <polyline data-trail stroke-width="1.4" stroke-dasharray="2 4" points=""/>
+  <circle data-ball r="6" fill="#000" stroke="none"/>
+  <circle data-saddle-pt r="3" fill="#fff" stroke="#000" stroke-width="1.2"/>
+  <g data-loss transform="translate(20 372)">
+    <line x1="0" y1="64" x2="150" y2="64"/>
+    <line x1="0" y1="0" x2="0" y2="64"/>
+    <polyline data-loss-line stroke-width="1.4" points=""/>
+    <text x="156" y="68" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#000" stroke="none">loss</text>
+  </g>
+</svg>
+
+<script>
+  const svg = document.querySelector<SVGSVGElement>("[data-saddle]");
+  if (svg) {
+    const grid = svg.querySelector<SVGGElement>("[data-grid]")!;
+    const trail = svg.querySelector<SVGPolylineElement>("[data-trail]")!;
+    const ball = svg.querySelector<SVGCircleElement>("[data-ball]")!;
+    const saddlePt = svg.querySelector<SVGCircleElement>("[data-saddle-pt]")!;
+    const lossLine = svg.querySelector<SVGPolylineElement>("[data-loss-line]")!;
+
+    // поверхность и проекция
+    const R = 1.25;                       // граница по x и y
+    const f = (x: number, y: number) => x * x - y * y;
+    // поворот вокруг вертикали на A, наклон камеры E (взгляд сверху-сбоку)
+    const CX = 236, CY = 190, S = 125, K = 58;
+    const A = 0.55, E = 0.62;
+    const cA = Math.cos(A), sA = Math.sin(A), sE = Math.sin(E), cE = Math.cos(E);
+    const P = (x: number, y: number, z: number) => {
+      const X = x * cA - y * sA, Yd = x * sA + y * cA;
+      return [CX + X * S, CY + Yd * S * sE - z * K * cE] as const;
+    };
+    const pt = (x: number, y: number) => P(x, y, f(x, y));
+
+    // сетка: 13 линий в каждом направлении
+    const N = 12, STEP = 0.05;
+    let d = "";
+    for (let i = 0; i <= N; i++) {
+      const a = -R + (2 * R * i) / N;
+      let p1 = "", p2 = "";
+      for (let t = -R; t <= R + 1e-9; t += STEP) {
+        const [ax, ay] = pt(a, t); p1 += `${p1 ? "L" : "M"}${ax.toFixed(1)} ${ay.toFixed(1)}`;
+        const [bx, by] = pt(t, a); p2 += `${p2 ? "L" : "M"}${bx.toFixed(1)} ${by.toFixed(1)}`;
+      }
+      d += p1 + p2;
+    }
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", d);
+    grid.appendChild(path);
+    const [sx, sy] = pt(0, 0);
+    saddlePt.setAttribute("cx", sx.toFixed(1)); saddlePt.setAttribute("cy", sy.toFixed(1));
+
+    // градиентный спуск с моментом и шумом: сначала к седлу по x, потом уход по y
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let x = 0, y = 0, vx = 0, vy = 0, step = 0;
+    let trailPts: string[] = [], losses: number[] = [];
+    const LR = 0.035, MOM = 0.86, NOISE = 0.0035, MAX_STEPS = 260;
+
+    function reset() {
+      x = 1.15; y = (Math.random() - 0.5) * 0.06; vx = 0; vy = 0; step = 0;
+      trailPts = []; losses = [];
+    }
+    function draw() {
+      const [bx, by] = pt(x, y);
+      ball.setAttribute("cx", bx.toFixed(1)); ball.setAttribute("cy", by.toFixed(1));
+      trail.setAttribute("points", trailPts.join(" "));
+      // кривая лосса: 150px по ширине, 64px по высоте, от max к min
+      if (losses.length > 1) {
+        const lo = Math.min(...losses), hi = Math.max(...losses), span = Math.max(hi - lo, 1e-6);
+        const w = 150 / MAX_STEPS;
+        lossLine.setAttribute("points", losses.map((l, i) => `${(i * w).toFixed(1)},${(64 - ((l - lo) / span) * 60).toFixed(1)}`).join(" "));
+      }
+    }
+    function tick() {
+      // градиент z = x² − y²: (2x, −2y)
+      const gx = 2 * x, gy = -2 * y;
+      vx = MOM * vx - LR * gx + (Math.random() - 0.5) * NOISE;
+      vy = MOM * vy - LR * gy + (Math.random() - 0.5) * NOISE;
+      x += vx; y += vy; step++;
+      const [bx, by] = pt(x, y);
+      trailPts.push(`${bx.toFixed(1)},${by.toFixed(1)}`);
+      losses.push(f(x, y));
+      draw();
+      if (Math.abs(y) > R || Math.abs(x) > R || step > MAX_STEPS) {
+        setTimeout(() => { reset(); }, 900);
+      }
+    }
+    reset();
+    if (reduce) {
+      // статичный кадр: вся траектория сразу
+      for (let i = 0; i < MAX_STEPS && Math.abs(y) <= R; i++) tick();
+    } else {
+      let last = 0;
+      const loop = (t: number) => {
+        if (t - last > 28) { last = t; if (!(Math.abs(y) > R || Math.abs(x) > R || step > MAX_STEPS)) tick(); }
+        requestAnimationFrame(loop);
+      };
+      requestAnimationFrame(loop);
+    }
+  }
+</script>
