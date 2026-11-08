@@ -8,11 +8,14 @@
   <polyline data-trail stroke-width="1.4" stroke-dasharray="2 4" points=""/>
   <circle data-ball r="6" fill="#000" stroke="none"/>
   <circle data-saddle-pt r="3" fill="#fff" stroke="#000" stroke-width="1.2"/>
-  <g data-loss transform="translate(20 372)">
-    <line x1="0" y1="64" x2="150" y2="64"/>
+  <g data-loss transform="translate(24 366)">
+    <line x1="0" y1="64" x2="160" y2="64"/>
+    <polyline points="156,61 160,64 156,67"/>
     <line x1="0" y1="0" x2="0" y2="64"/>
+    <polyline points="-3,4 0,0 3,4"/>
     <polyline data-loss-line stroke-width="1.4" points=""/>
-    <text x="156" y="68" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#000" stroke="none">loss</text>
+    <text x="6" y="4" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#000" stroke="none">loss</text>
+    <text x="160" y="78" text-anchor="end" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#000" stroke="none">итерация</text>
   </g>
 </svg>
 
@@ -72,36 +75,40 @@
       trail.setAttribute("points", trailPts.join(" "));
       // кривая лосса: идёт вправо по шагам, спадает к нулю с небольшими затухающими осцилляциями
       if (losses.length > 1) {
-        const w = 150 / MAX_STEPS;
+        const w = 160 / MAX_STEPS;
         lossLine.setAttribute("points", losses.map((l, i) => `${(i * w).toFixed(1)},${(64 - l * 58).toFixed(1)}`).join(" "));
       }
     }
     function tick() {
       // градиент z = x² − y²: (2x, −2y)
       const gx = 2 * x, gy = -2 * y;
-      vx = MOM * vx - LR * gx + (Math.random() - 0.5) * NOISE;
-      vy = MOM * vy - LR * gy + (Math.random() - 0.5) * NOISE;
-      x += vx; y += vy; step++;
-      const [bx, by] = pt(x, y);
-      trailPts.push(`${bx.toFixed(1)},${by.toFixed(1)}`);
+      const out = Math.abs(y) > R || Math.abs(x) > R;
+      if (!out) {
+        vx = MOM * vx - LR * gx + (Math.random() - 0.5) * NOISE;
+        vy = MOM * vy - LR * gy + (Math.random() - 0.5) * NOISE;
+        x += vx; y += vy;
+        const [bx, by] = pt(x, y);
+        trailPts.push(`${bx.toFixed(1)},${by.toFixed(1)}`);
+      }
+      step++;
       // нормированный лосс в [0,1]: экспоненциальный спад + затухающие колебания + лёгкий шум
-      const base = 0.03 + 0.97 * Math.exp(-step / 75);
-      const osc = 0.06 * Math.sin(step / 2.6) * Math.exp(-step / 110);
-      ema = 0.7 * ema + 0.3 * Math.max(0.015, base + osc + (Math.random() - 0.5) * 0.02);
+      const base = 0.035 + 0.965 * Math.exp(-step / 48);
+      const osc = 0.05 * Math.sin(step / 2.4) * Math.exp(-step / 70);
+      ema = 0.7 * ema + 0.3 * Math.max(0.02, base + osc + (Math.random() - 0.5) * 0.012 * Math.exp(-step / 200));
       losses.push(ema);
       draw();
-      if (Math.abs(y) > R || Math.abs(x) > R || step > MAX_STEPS) {
+      if (step >= MAX_STEPS) {
         setTimeout(() => { reset(); }, 1600);
       }
     }
     reset();
     if (reduce) {
       // статичный кадр: вся траектория сразу
-      for (let i = 0; i < MAX_STEPS && Math.abs(y) <= R; i++) tick();
+      for (let i = 0; i < MAX_STEPS; i++) tick();
     } else {
       let last = 0;
       const loop = (t: number) => {
-        if (t - last > TICK_MS) { last = t; if (!(Math.abs(y) > R || Math.abs(x) > R || step > MAX_STEPS)) tick(); }
+        if (t - last > TICK_MS) { last = t; if (step < MAX_STEPS) tick(); }
         requestAnimationFrame(loop);
       };
       requestAnimationFrame(loop);
