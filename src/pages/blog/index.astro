@@ -1,0 +1,33 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+const posts = (await getCollection("blog")).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const fmt = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", year: "numeric" });
+---
+<Base title="Блог — Lamon" description="Кейсы, конференции, защиты и заметки преподавателей школы разработки искусственного интеллекта Lamon.">
+<main>
+  <section class="sec blog-head">
+    <div class="wrap">
+      <p class="eyebrow">Блог</p>
+      <h1>Что делают ученики и преподаватели Lamon</h1>
+      <p class="lead">Кейсы, поездки на конференции, защиты и заметки о том, как устроена работа в школе.</p>
+    </div>
+  </section>
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      <div class="post-list">
+        {posts.map((p) => (
+          <a class="post-card" href={`/blog/${p.id}`}>
+            <img src={p.data.cover} alt={p.data.coverAlt} loading="lazy" width="1200" height="800" />
+            <div class="post-card-body">
+              <div class="post-meta mono">{fmt.format(p.data.date)}{p.data.place ? ` · ${p.data.place}` : ""}</div>
+              <h2>{p.data.title}</h2>
+              <p>{p.data.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</main>
+</Base>

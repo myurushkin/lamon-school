@@ -1,0 +1,23 @@
+---
+// «Последний кейс» на главной: берёт самую свежую запись блога с featured: true
+// (если такой нет — просто самую свежую).
+import { getCollection } from "astro:content";
+const posts = (await getCollection("blog")).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const post = posts.find((p) => p.data.featured) ?? posts[0];
+---
+{post && (
+  <section class="case" id="case">
+    <div class="wrap case-grid">
+      <div class="case-photo">
+        <img src={post.data.cover} alt={post.data.coverAlt} loading="eager" width="1200" height="800" />
+      </div>
+      <div class="case-text">
+        <h2>{post.data.heroTitle ?? post.data.title}</h2>
+        <p class="lead">{post.data.heroText ?? post.data.description}</p>
+        {post.data.paperTitle && (
+          <p class="case-paper">Работа: «{post.data.paperTitle}»</p>
+        )}
+      </div>
+    </div>
+  </section>
+)}

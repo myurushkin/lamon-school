@@ -1,0 +1,27 @@
+---
+import { team } from "../../data/team";
+---
+<section class="sec" id="people">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Преподаватели</p>
+      <h2>Учат учёные-исследователи и&nbsp;практики из&nbsp;индустрии</h2>
+    </div>
+    <div class="teachers-grid">
+      {team.map((p) => (
+        <article class="teacher">
+          {p.photo
+            ? <img src={p.photo} alt={p.name} width="600" height="600" loading="lazy" />
+            : <div class="teacher-ph" aria-hidden="true">{p.initials}</div>}
+          <h3 class="teacher-name">{p.name}</h3>
+          <ul class="teacher-regalia">
+            {p.regalia.map((r) => <li>{r}</li>)}
+          </ul>
+          <div class="teacher-tags">
+            {p.teaches.map((t) => <span>#{t}</span>)}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,19 @@
+{
+  "name": "site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "astro build",
+    "preview": "astro preview --host 127.0.0.1 --port 8768"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "astro": "^7.4.7",
+    "leaflet": "^1.9.4"
+  }
+}

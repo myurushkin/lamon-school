@@ -1,0 +1,52 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const fmt = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", year: "numeric" });
+---
+<Base title={`${post.data.title} — Lamon`} description={post.data.description} image={post.data.cover}>
+<main>
+  <article class="post">
+    <header class="post-header wrap">
+      <a class="back mono" href="/blog">← Блог</a>
+      <div class="post-meta mono">{fmt.format(post.data.date)}{post.data.place ? ` · ${post.data.place}` : ""}</div>
+      <h1>{post.data.title}</h1>
+      <p class="lead">{post.data.description}</p>
+    </header>
+    <figure class="post-cover wrap">
+      <img src={post.data.cover} alt={post.data.coverAlt} width="1600" height="1000" loading="eager" />
+      <figcaption>{post.data.coverAlt}</figcaption>
+    </figure>
+    <div class="prose wrap">
+      <Content />
+    </div>
+    {post.data.gallery.length > 0 && (
+      <div class="gallery wrap">
+        {post.data.gallery.map((g) => (
+          <figure>
+            <img src={g.src} alt={g.alt} loading="lazy" width="1200" height="800" />
+            {g.caption && <figcaption>{g.caption}</figcaption>}
+          </figure>
+        ))}
+      </div>
+    )}
+    {post.data.tags.length > 0 && (
+      <div class="tags wrap mono">{post.data.tags.map((t) => <span>#{t}</span>)}</div>
+    )}
+    <aside class="post-cta wrap">
+      <div>
+        <h2>Хотите так же?</h2>
+        <p>Расскажем, как попасть в трек, и честно скажем, хватит ли базы.</p>
+      </div>
+      <a class="btn btn-primary" href="/#apply">Подать заявку</a>
+    </aside>
+  </article>
+</main>
+</Base>

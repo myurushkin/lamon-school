@@ -1,0 +1,27 @@
+---
+const works = [
+  { tag: "Наука, NLP", title: "Объяснимый подбор кандидатов под вакансии", text: "Building Interpretable Feature Representations for Resume–Vacancy Matching by Distilling Production LLM Signals. EMNLP 2026, Industry Track, Будапешт.", href: "https://aclanthology.org/2026.emnlp-industry.71/" },
+  { tag: "Наука, биология", title: "Неканонические структуры ДНК", text: "Автоматные методы поиска последовательностей, способных образовывать неканонические структуры ДНК. Computational Biology and Chemistry, Elsevier.", href: "https://doi.org/10.1016/j.compbiolchem.2019.04.009" },
+  { tag: "Наука, биология", title: "Тандемные повторы и их клиническая значимость", text: "Структурные особенности тандемных повторов. Biochemical and Biophysical Research Communications, Elsevier.", href: "https://doi.org/10.1016/j.bbrc.2023.149349" },
+  { tag: "Продукт, агротех", title: "Подсчёт зёрен кукурузы по фото", text: "Компьютерное зрение для SeedMetrics, Бразилия. Статья «Automated Corn Kernel Counting from Multiple Views», IITI 2025.", href: "https://link.springer.com/chapter/10.1007/978-3-032-13612-1_3" },
+  { tag: "R&D, вычисления", title: "Бэкенд PyTorch для нестандартных числовых форматов", text: "Совместно с исследователями компиляторов Stillwater Supercomputing, США.", href: "#partners" },
+  { tag: "Наука, данные", title: "Выделение основных цветов через топологический анализ данных", text: "Principal Colors Extraction Using Topological Data Analysis. FICC, Springer.", href: "https://doi.org/10.1007/978-3-030-98012-2_6" },
+];
+---
+<section class="sec" id="works">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow">Примеры выполненных работ</p>
+      <h2>Что уже сделано</h2>
+    </div>
+    <div class="works">
+      {works.map((w) => (
+        <div class="work">
+          <div class="work-tag mono">{w.tag}</div>
+          <h3>{w.title}</h3>
+          <p>{w.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

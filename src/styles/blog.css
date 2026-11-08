@@ -1,0 +1,209 @@
+/* ---- кейс на главной ---- */
+.case{border-bottom:1px solid var(--line);padding:40px 0 56px}
+@media(min-width:900px){.case{padding:44px 0 80px}}
+.case-grid{display:grid;gap:28px;align-items:center}
+@media(min-width:900px){.case-grid{grid-template-columns:.8fr 1.2fr;gap:56px}}
+@media(max-width:899px){.case-text{order:1}.case-photo{order:2}}
+.case-photo{display:block;border:1px solid var(--line);overflow:hidden;background:#fff}
+.case-photo img{display:block;width:100%;height:auto;aspect-ratio:8/9;object-fit:cover;object-position:center top;transition:filter .3s ease}
+.case-text h2{margin-bottom:14px}
+.case-text .lead{margin-bottom:26px}
+
+/* ---- список записей ---- */
+.blog-head h1{font-size:clamp(34px,5vw,56px);line-height:1.05;letter-spacing:-.03em;margin:0 0 16px;max-width:18ch}
+.blog-head .lead{margin:0}
+.post-list{display:grid;gap:28px}
+@media(min-width:760px){.post-list{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.post-list{grid-template-columns:repeat(3,1fr)}}
+.post-card{display:block;text-decoration:none;border-top:1px solid var(--ink);padding-top:16px}
+.post-card img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border:1px solid var(--line);transition:filter .3s ease}
+.post-card h2{font-size:21px;line-height:1.25;letter-spacing:-.015em;margin:10px 0 8px}
+.post-card p{margin:0;color:var(--ink-2);font-size:15px}
+.post-meta{font-size:13px;color:var(--ink-3);margin-top:14px}
+
+/* ---- запись ---- */
+.post{padding:56px 0 72px}
+@media(min-width:900px){.post{padding:80px 0 96px}}
+.post-header{max-width:800px}
+.post-header .back{display:inline-block;text-decoration:none;color:var(--ink-3);font-size:13px;margin-bottom:22px}
+.post-header .back:hover{color:var(--ink)}
+.post-header .post-meta{margin:0 0 16px}
+.post-header h1{font-size:clamp(32px,4.6vw,52px);line-height:1.08;letter-spacing:-.03em;margin:0 0 16px}
+.post-header .lead{margin:0 0 36px}
+.post-cover{margin:0 auto 40px}
+.post-cover img{display:block;width:auto;max-width:100%;max-height:78vh;height:auto;margin:0 auto;border:1px solid var(--line)}
+.post-cover figcaption{text-align:center}
+.post-cover figcaption,.gallery figcaption{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3);margin-top:10px;letter-spacing:.02em}
+.prose{max-width:720px;font-size:18px;line-height:1.65}
+.prose h2{font-size:26px;margin:40px 0 12px;letter-spacing:-.02em}
+.prose h3{font-size:20px;margin:28px 0 8px}
+.prose p{margin:0 0 18px}
+.prose ul,.prose ol{margin:0 0 18px;padding-left:22px}
+.prose li{margin:4px 0}
+.prose blockquote{margin:24px 0;padding:4px 0 4px 18px;border-left:2px solid var(--ink);color:var(--ink-2)}
+.prose img{display:block;width:100%;height:auto;border:1px solid var(--line);margin:24px 0}
+.prose a{text-decoration-thickness:1px;text-underline-offset:3px}
+.prose hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+.gallery{display:grid;gap:18px;margin-top:40px}
+@media(min-width:760px){.gallery{grid-template-columns:repeat(2,1fr)}}
+.gallery figure{margin:0}
+.gallery img{display:block;width:100%;height:auto;border:1px solid var(--line)}
+.tags{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:32px;font-size:13px;color:var(--ink-3)}
+.post-cta{margin-top:56px;border-top:1px solid var(--ink);padding-top:28px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
+.post-cta h2{font-size:24px;margin:0 0 6px;letter-spacing:-.02em}
+.post-cta p{margin:0;color:var(--ink-2)}
+
+/* ---- карта ---- */
+.places{display:grid;gap:24px}
+@media(min-width:900px){.places{grid-template-columns:.8fr 1.2fr;gap:40px}}
+.places-list{display:grid;gap:0;align-content:start}
+.place{padding:0 0 26px}
+.place:last-child{padding-bottom:0}
+.place-n{font-size:12px;color:var(--ink-3);letter-spacing:.08em;margin-bottom:6px}
+.place h3{margin:0 0 6px}
+.place p{margin:0 0 10px;color:var(--ink-2)}
+.place a{font-size:14px;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink)}
+.map{min-height:360px;height:100%;border:1px solid var(--ink);background:#fff;position:relative;z-index:0;isolation:isolate}
+.map .leaflet-tile-pane{filter:grayscale(1) contrast(1.08) brightness(1.04)}
+@media(min-width:900px){.map{min-height:440px}}
+.leaflet-container{font-family:inherit}
+.pin,.leaflet-marker-icon.pin{background:#000;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.04em;border:2px solid #fff;box-shadow:0 0 0 1px #000}
+.pin-tip{background:#000;color:#fff;border:0;border-radius:3px;font-size:13px;padding:4px 8px;box-shadow:none}
+.pin-tip::before{border-top-color:#000}
+.leaflet-control-zoom a{border-radius:0!important;color:#000}
+.leaflet-control-attribution{font-size:10px;background:rgba(255,255,255,.8)}
+.ymaps3x0--marker .pin,[class*="ymaps3"] .pin{width:30px;height:30px;transform:translate(-50%,-50%);position:relative}
+.pin em{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;font-style:normal;display:none}
+.pin:hover em,.pin.show em{display:block}
+
+/* ---- фичер-блоки (исследователь, стартапы, агро) ---- */
+.feature{display:grid;gap:28px;align-items:start;border-top:1px solid var(--ink);padding-top:32px}
+@media(min-width:900px){.feature{grid-template-columns:320px 1fr;gap:56px}.feature-reverse{grid-template-columns:1fr 320px}}
+.feature-media .photo{display:block;width:100%;max-width:320px;height:auto;border:1px solid var(--line)}
+.feature-media .fig{max-width:320px}
+.feature-body h3{font-size:26px;letter-spacing:-.02em;margin:0 0 6px}
+.feature-body h2{margin-bottom:14px}
+.feature-body p{color:var(--ink-2);margin:0 0 14px}
+.feature-body .role{color:var(--ink-3);font-size:15px;margin-bottom:16px}
+.feature-body .role a{color:var(--ink)}
+.avatar-lg{width:200px;height:200px;font-size:48px}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:12px 24px;margin:22px 0;border-top:1px solid var(--line);padding-top:18px}
+.kv dt{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);padding-top:3px}
+.kv dd{margin:0;color:var(--ink-2)}
+.pubs-mini{margin:0;padding-left:18px}
+.pubs-mini li{margin:4px 0}
+.pubs-mini .mono{font-size:12px;color:var(--ink-3)}
+.link{font-size:14px;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink)}
+.todo{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink-3);border:1px dashed var(--line);padding:8px 10px}
+.quote{margin:22px 0;border-left:2px solid var(--ink);padding-left:18px}
+.quote blockquote{margin:0 0 12px;color:var(--ink-2);font-size:17px}
+.quote figcaption{display:flex;gap:12px;align-items:center;font-size:14px;color:var(--ink-3)}
+.quote img{width:44px;height:44px;border-radius:50%;object-fit:cover}
+
+/* ---- партнёры ---- */
+.partners{display:grid;gap:18px}
+@media(min-width:760px){.partners{grid-template-columns:repeat(2,1fr)}}
+.partner{border-top:1px solid var(--ink);padding:20px 0 24px}
+.partner-head{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.partner-head img{width:56px;height:56px;border-radius:50%;object-fit:cover}
+.partner-head .avatar{width:56px;height:56px;font-size:20px;border-radius:50%}
+.partner h3{margin:0 0 4px;font-size:19px}
+.partner h3 a{text-decoration:none;border-bottom:1px solid var(--ink)}
+.partner .role{color:var(--ink-3);font-size:14px}
+.partner blockquote{margin:0;color:var(--ink-2);font-size:16px}
+
+/* ---- преподаватели с фото ---- */
+.avatar-img{object-fit:cover}
+
+/* ---- примеры работ ---- */
+.works{display:grid;gap:18px}
+@media(min-width:760px){.works{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.works{grid-template-columns:repeat(3,1fr)}}
+.work{display:block;text-decoration:none;border-top:1px solid var(--ink);padding:16px 0 20px}
+.work-tag{font-size:13px;color:var(--ink-3);margin-bottom:10px}
+.work h3{font-size:19px;line-height:1.25;margin:0 0 8px;letter-spacing:-.01em}
+.work p{margin:0;color:var(--ink-2);font-size:15px}
+.work:hover h3{text-decoration:underline;text-underline-offset:3px}
+
+/* ---- публикации ---- */
+.pub-year-group{display:grid;gap:8px 32px;border-top:1px solid var(--ink);padding:20px 0 8px}
+@media(min-width:760px){.pub-year-group{grid-template-columns:100px 1fr}}
+.pub-year{font-size:14px;color:var(--ink-3);padding-top:4px}
+.pub-list{list-style:none;margin:0;padding:0}
+.pub{padding:0 0 18px}
+.pub-title{font-weight:600;font-size:17px;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
+a.pub-title:hover{text-decoration:underline;text-underline-offset:3px}
+.pub-meta{font-size:14px;color:var(--ink-3);margin-top:4px}
+.track-card{display:flex;flex-direction:column}
+.track-card h3{font-size:21px;line-height:1.25;letter-spacing:-.015em;margin-bottom:10px}
+.track-card p{flex:1}
+.mentor{display:flex;gap:12px;align-items:center;margin-top:22px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-3);line-height:1.35}
+.mentor b{color:var(--ink);font-weight:600}
+.mentor img{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:none}
+.mentor .avatar{width:40px;height:40px;font-size:14px;border-radius:50%;flex:none}
+/* ---- треки отдельными блоками ---- */
+.track-grid{display:grid;gap:32px;align-items:center}
+@media(min-width:900px){.track-grid{grid-template-columns:1.1fr .9fr;gap:64px}.track-rev .track-grid{grid-template-columns:.9fr 1.1fr}.track-rev .track-body{order:2}}
+.track-fig{max-width:380px;justify-self:center}
+.track-body h2{margin-bottom:14px}
+.track-body .lead{margin-bottom:18px}
+.track-points{margin:0 0 6px;padding:0;list-style:none;border-top:1px solid var(--ink)}
+.track-points li{padding:10px 0;border-bottom:1px solid var(--line);color:var(--ink-2)}
+.track-sec .mentor{margin-top:18px;border-top:0;padding-top:0}
+.track-sec .mentor img,.track-sec .mentor .avatar{width:48px;height:48px}
+
+/* ---- чёрная полоса «Наши исследователи» ---- */
+.research-band{background:#000;color:#fff;border-top:0}
+.research-band+.sec{border-top:0}
+.band-inner{max-width:880px;margin:0 auto;text-align:center}
+.band-inner .eyebrow{color:#fff;opacity:.6}
+.band-inner h2{color:#fff;max-width:none;margin-bottom:18px}
+.band-inner .lead{color:#c8c8c8;margin:0 auto 32px;max-width:60ch}
+.band-inner .cta-row{justify-content:center}
+
+/* ---- преподаватели: крупное фото, под ним регалии и текст ---- */
+.teachers-grid{display:grid;gap:40px 28px}
+@media(min-width:760px){.teachers-grid{grid-template-columns:repeat(3,1fr)}}
+.teacher{margin:0;display:flex;flex-direction:column;gap:18px}
+.teacher img,.teacher-ph{width:200px;height:200px;aspect-ratio:1/1;object-fit:cover;object-position:center top;display:block;border:1px solid var(--line);background:var(--accent-soft)}
+.teacher-ph{display:flex;align-items:center;justify-content:center;font-family:"IBM Plex Mono",monospace;font-size:44px;color:var(--ink-3)}
+.teacher-name{font-size:21px;font-weight:600;letter-spacing:-.015em;line-height:1.25}
+.teacher-role{font-size:14px;color:var(--ink-3);margin:4px 0 12px;line-height:1.4}
+.teacher figcaption p{margin:0;color:var(--ink-2);font-size:15px;line-height:1.55}
+.case-paper{font-size:15px;color:var(--ink-2);margin:0}
+.case-paper a{color:var(--ink)}
+/* ---- мобильные поправки ---- */
+@media(max-width:719px){
+  .logo span{display:none}
+  .hero-fig{display:none}
+  .track-fig{max-width:220px}
+  .hero{padding:48px 0 36px}
+  .btn-sm{padding:9px 14px;font-size:13px}
+}
+.leaflet-control-attribution a{pointer-events:none;text-decoration:none;color:inherit}
+/* ---- преподаватели как на ШАД ---- */
+.teachers-grid{display:grid;gap:44px 32px}
+@media(min-width:720px){.teachers-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.teachers-grid{grid-template-columns:repeat(3,1fr)}}
+.teacher{display:flex;flex-direction:column;gap:0}
+.teacher img,.teacher-ph{width:100%;max-width:300px;height:auto;aspect-ratio:1/1;object-fit:cover;object-position:center top;display:block;border-radius:6px;background:var(--accent-soft)}
+.teacher-ph{display:flex;align-items:center;justify-content:center;font-family:"IBM Plex Mono",monospace;font-size:44px;color:var(--ink-3)}
+.teacher-name{font-size:20px;font-weight:600;letter-spacing:-.015em;line-height:1.25;margin:18px 0 10px}
+.teacher-regalia{margin:0;padding-left:18px;color:var(--ink-2);font-size:15px;line-height:1.5}
+.teacher-regalia li{margin:3px 0}
+.teacher-tags{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:14px;font-size:14px;color:var(--ink-3)}
+/* ---- где проводим занятия (в блоке записи) ---- */
+.where-h{font-size:17px;margin:28px 0 10px}
+.where{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.where li{display:grid;gap:2px;font-size:15px;color:var(--ink-2)}
+.where b{color:var(--ink);font-weight:600}
+.where-mode{font-size:12px;color:var(--ink-3)}
+#places .map{min-height:320px;height:100%}
+.places-layout{display:grid;gap:28px}
+@media(min-width:900px){.places-layout{grid-template-columns:.8fr 1.2fr;gap:48px}}
+.where-grid{align-content:start;gap:22px}
+.where-grid li{font-size:16px}
+.where-grid b{font-size:18px}
+.tracks-head{padding-bottom:0}
+.tracks-head .sec-head{margin-bottom:0}
+.tracks-head+.track-sec{border-top:0}

@@ -1,0 +1,37 @@
+---
+import Base from "../layouts/Base.astro";
+import { publications } from "../data/publications";
+const byYear = publications.reduce<Record<number, typeof publications>>((acc, p) => {
+  (acc[p.year] ||= []).push(p);
+  return acc;
+}, {});
+const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
+---
+<Base title="Публикации — Lamon" description="Рецензируемые публикации преподавателей школы Lamon: распознавание образов, прикладное машинное обучение, параллельные вычисления, вычислительная биология. Elsevier, Springer, IEEE, ACM.">
+<main>
+  <section class="sec blog-head">
+    <div class="wrap">
+      <p class="eyebrow">Исследования</p>
+      <h1>Публикации преподавателей</h1>
+      <p class="lead">{publications.length} рецензируемых работ: распознавание образов, прикладное машинное обучение, параллельные вычисления, вычислительная биология. Elsevier, Springer, IEEE, ACM.</p>
+    </div>
+  </section>
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      {years.map((y) => (
+        <div class="pub-year-group">
+          <div class="pub-year mono">{y}</div>
+          <ul class="pub-list">
+            {byYear[y].map((p) => (
+              <li class="pub">
+                {p.url ? <a class="pub-title" href={p.url} target="_blank" rel="noopener">{p.title}</a> : <span class="pub-title">{p.title}</span>}
+                <div class="pub-meta">{p.authors} · <i>{p.venue}</i></div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+</main>
+</Base>

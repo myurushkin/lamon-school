@@ -1,0 +1,86 @@
+---
+const YKEY = import.meta.env.PUBLIC_YMAPS_KEY ?? "";
+---
+<link rel="stylesheet" href="/vendor/leaflet/leaflet.css" />
+<section class="sec" id="places">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Где проводим занятия</p>
+      <h2>Два офиса в Ростове-на-Дону и&nbsp;онлайн для других городов</h2>
+    </div>
+    <div class="places-layout">
+      <ul class="where where-grid">
+          <li class="place" data-ll="47.2175,39.6152">
+            <span class="where-mode">очно / онлайн</span>
+            <b>Ростов-на-Дону, офис на Надёжной</b>
+            <span>ул. Надёжная, 82</span>
+          </li>
+          <li class="place" data-ll="47.2167,39.6286">
+            <span class="where-mode">очно / онлайн</span>
+            <b>Ростов-на-Дону, мехмат ЮФУ</b>
+            <span>ул. Мильчакова, 8а, Институт математики, механики и компьютерных наук им. И. И. Воровича. Здесь мы преподаём</span>
+          </li>
+          <li class="place">
+            <span class="where-mode">онлайн</span>
+            <b>Другие города</b>
+            <span>Встречи, разборы и работа над задачей идут онлайн вместе с очной группой</span>
+          </li>
+        </ul>
+      <div id="map" class="map" data-ymaps={YKEY} role="img" aria-label="Карта: офис на ул. Надёжная, 82 и мехмат ЮФУ на ул. Мильчакова, 8а"></div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function(){
+    var el = document.getElementById('map'); if(!el) return;
+    var pts = Array.from(document.querySelectorAll('.place[data-ll]')).map(function(p, i){
+      var ll = p.dataset.ll.split(',').map(Number);
+      return { lat: ll[0], lon: ll[1], title: p.querySelector('b').textContent, n: String(i+1).padStart(2,'0'), el: p };
+    });
+    var key = el.dataset.ymaps || '';
+    function loadScript(src, onload){ var sc=document.createElement('script'); sc.src=src; sc.async=true; sc.onload=onload; sc.onerror=function(){ initLeaflet(); }; document.head.appendChild(sc); }
+    function initYandex(){
+      ymaps3.ready.then(function(){
+        var map = new ymaps3.YMap(el, { location: { center: [pts[0].lon, pts[0].lat], zoom: 14 }, zoomRange: { min: 11, max: 18 }, restrictMapArea: [[39.2,46.9],[40.1,47.5]], behaviors: ['drag','pinchZoom','dblClick'] });
+        map.addChild(new ymaps3.YMapDefaultSchemeLayer({ theme: 'light' }));
+        map.addChild(new ymaps3.YMapDefaultFeaturesLayer());
+        map.addChild(new ymaps3.YMapControls({ position: 'right' }));
+        var minLon=180,maxLon=-180,minLat=90,maxLat=-90;
+        pts.forEach(function(pt){
+          var m = document.createElement('div'); m.className='pin'; m.innerHTML='<span>'+pt.n+'</span><em class="pin-tip">'+pt.title+'</em>';
+          map.addChild(new ymaps3.YMapMarker({ coordinates: [pt.lon, pt.lat] }, m));
+          pt.el.addEventListener('mouseenter', function(){ m.classList.add('show'); });
+          pt.el.addEventListener('mouseleave', function(){ m.classList.remove('show'); });
+          minLon=Math.min(minLon,pt.lon); maxLon=Math.max(maxLon,pt.lon); minLat=Math.min(minLat,pt.lat); maxLat=Math.max(maxLat,pt.lat);
+        });
+        var padLon=(maxLon-minLon)*0.4||0.005, padLat=(maxLat-minLat)*0.4||0.005;
+        map.setLocation({ bounds: [[minLon-padLon, minLat-padLat],[maxLon+padLon, maxLat+padLat]], duration: 0 });
+      });
+    }
+    function initLeaflet(){
+      if(el.dataset.inited==='L') return; el.dataset.inited='L';
+      loadScript('/vendor/leaflet/leaflet.js', function(){
+        var map = L.map(el, { scrollWheelZoom:false, attributionControl:true, minZoom: 11, maxZoom: 18, maxBounds: [[46.9,39.2],[47.5,40.1]], maxBoundsViscosity: 1 });
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
+        var group = pts.map(function(pt){
+          var icon = L.divIcon({ className:'pin', html:'<span>'+pt.n+'</span>', iconSize:[30,30], iconAnchor:[15,15] });
+          var m = L.marker([pt.lat, pt.lon], { icon: icon }).addTo(map).bindTooltip(pt.title, { direction:'top', offset:[0,-16], className:'pin-tip' });
+          pt.el.addEventListener('mouseenter', function(){ m.openTooltip(); });
+          pt.el.addEventListener('mouseleave', function(){ m.closeTooltip(); });
+          return m;
+        });
+        map.fitBounds(L.featureGroup(group).getBounds().pad(0.35));
+      });
+    }
+    function start(){
+      if(el.dataset.inited) return;
+      if(key){ el.dataset.inited='Y'; loadScript('https://api-maps.yandex.ru/v3/?apikey='+encodeURIComponent(key)+'&lang=ru_RU', initYandex); }
+      else initLeaflet();
+    }
+    if('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ io.disconnect(); start(); } }); }, { rootMargin: '200px' });
+      io.observe(el);
+    } else start();
+  })();
+</script>
