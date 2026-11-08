@@ -1,7 +1,7 @@
 /* ---- кейс на главной ---- */
 .case{border-bottom:1px solid var(--line);padding:40px 0 56px}
 @media(min-width:900px){.case{padding:44px 0 80px}}
-.case-grid{display:grid;gap:28px;align-items:center}
+.case-grid{display:grid;gap:28px;align-items:start}
 @media(min-width:900px){.case-grid{grid-template-columns:.8fr 1.2fr;gap:56px}}
 @media(max-width:899px){.case-text{order:1}.case-photo{order:2}}
 .case-photo{display:block;border:1px solid var(--line);overflow:hidden;background:#fff}
