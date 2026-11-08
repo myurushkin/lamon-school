@@ -25,6 +25,8 @@ const tracks = [
     title: "Опубликуйся на топовой конференции по ИИ",
     text: "Сделай исследование в генеративном ИИ, которое примут на конференцию уровня A*, и поезжай его представлять. Там ты познакомишься с исследователями из лучших лабораторий мира и станешь частью международного сообщества: именно так открываются стажировки и приглашения в ведущие лабы.",
     points: ["Статья на международной конференции с тобой в авторах", "Поездка на конференцию, знакомства с исследователями со всего мира", "Путь к стажировкам в ведущих лабораториях мира"],
+    image: "/images/tracks/conference-hall.webp",
+    imageAlt: "Пленарный зал международной конференции по ИИ: несколько тысяч исследователей",
     fig: '<polygon points="160,30 290,290 30,290"/><polygon points="160,120 230,260 90,260"/><circle cx="160" cy="215" r="6" fill="#000" stroke="none"/><line x1="160" y1="30" x2="160" y2="120"/>',
   },
 ];
@@ -43,7 +45,9 @@ const tracks = [
             <a class="btn btn-primary" href="#apply">Записаться на звонок</a>
           </div>
         </div>
-        <svg class="fig track-fig" viewBox="0 0 320 320" fill="none" stroke="#000" stroke-width="1.25" aria-hidden="true" set:html={t.fig} />
+        {"image" in t && t.image
+          ? <img class="track-img" src={t.image} alt={(t as any).imageAlt ?? ""} width="1600" height="1067" loading="lazy" />
+          : <svg class="fig track-fig" viewBox="0 0 320 320" fill="none" stroke="#000" stroke-width="1.25" aria-hidden="true" set:html={t.fig} />}
       </div>
     </div>
   </section>

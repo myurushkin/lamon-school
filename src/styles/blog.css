@@ -207,3 +207,5 @@ a.pub-title:hover{text-decoration:underline;text-underline-offset:3px}
 .tracks-head{padding-bottom:0}
 .tracks-head .sec-head{margin-bottom:0}
 .tracks-head+.track-sec{border-top:0}
+.track-img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border:1px solid var(--line)}
+@media(min-width:900px){.track-sec:has(.track-img) .track-grid{grid-template-columns:1fr 1fr;align-items:center}}
