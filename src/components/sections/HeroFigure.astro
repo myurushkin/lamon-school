@@ -8,14 +8,14 @@
   <polyline data-trail stroke="#000" stroke-opacity=".7" stroke-width="1.6" stroke-dasharray="2 4" points=""/>
   <circle data-ball r="6" fill="#000" stroke="#fff" stroke-width="1.5"/>
   <circle data-saddle-pt r="3" fill="#fff" stroke="#000" stroke-width="1.2"/>
-  <g data-loss transform="translate(24 366)">
-    <line x1="0" y1="64" x2="160" y2="64"/>
-    <polyline points="156,61 160,64 156,67"/>
-    <line x1="0" y1="0" x2="0" y2="64"/>
+  <g data-loss transform="translate(106 356)">
+    <line x1="0" y1="90" x2="260" y2="90"/>
+    <polyline points="256,87 260,90 256,93"/>
+    <line x1="0" y1="0" x2="0" y2="90"/>
     <polyline points="-3,4 0,0 3,4"/>
-    <polyline data-loss-line stroke-width="1.4" points=""/>
-    <text x="6" y="4" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#000" stroke="none">loss</text>
-    <text x="160" y="78" text-anchor="end" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10" fill="#000" stroke="none">итерация</text>
+    <polyline data-loss-line stroke="#1d4ed8" stroke-width="1.8" points=""/>
+    <text x="7" y="5" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#000" stroke="none">loss</text>
+    <text x="260" y="104" text-anchor="end" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="11" fill="#000" stroke="none">итерация</text>
   </g>
 </svg>
 
@@ -34,7 +34,7 @@
     const f = (x: number, y: number) => x * x - y * y + 0.5 * y ** 4;
     const F_MIN = -0.5;
     // поворот вокруг вертикали на A, наклон камеры E (взгляд сверху-сбоку)
-    const CX = 236, CY = 186, S = 112, K = 54;
+    const CX = 236, CY = 168, S = 108, K = 52;
     const A = 0.55, E = 0.62;
     const cA = Math.cos(A), sA = Math.sin(A), sE = Math.sin(E), cE = Math.cos(E);
     const P = (x: number, y: number, z: number) => {
@@ -95,8 +95,8 @@
       trail.setAttribute("points", trailPts.join(" "));
       // кривая лосса: идёт вправо по шагам, спадает к нулю с небольшими затухающими осцилляциями
       if (losses.length > 1) {
-        const w = 160 / MAX_STEPS;
-        lossLine.setAttribute("points", losses.map((l, i) => `${(i * w).toFixed(1)},${(64 - l * 58).toFixed(1)}`).join(" "));
+        const w = 260 / MAX_STEPS;
+        lossLine.setAttribute("points", losses.map((l, i) => `${(i * w).toFixed(1)},${(90 - l * 82).toFixed(1)}`).join(" "));
       }
     }
     function tick() {
