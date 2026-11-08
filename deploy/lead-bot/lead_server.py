@@ -3,7 +3,7 @@
 
 POST /api/lead  {"name": "...", "phone": "+7 (XXX) XXX-XX-XX"}
 Пишет каждую заявку в JSONL-лог и шлёт уведомление ботом:
-  • MAX      — MAX_BOT_TOKEN + MAX_USER_ID   (api: platform-api2.max.ru, доступен из России)
+  • MAX      — MAX_BOT_TOKEN + MAX_USER_ID   (api: botapi.max.ru, доступен из России)
   • Telegram — TG_BOT_TOKEN + TG_CHAT_ID     (api.telegram.org; с российских серверов часто недоступен)
 Настроенные каналы используются все; достаточно одного.
 Конфиг: /etc/lamon/lead.env. Только стандартная библиотека.
@@ -18,7 +18,7 @@ TOKEN = os.environ.get("TG_BOT_TOKEN", "")
 CHAT_ID = os.environ.get("TG_CHAT_ID", "")
 MAX_TOKEN = os.environ.get("MAX_BOT_TOKEN", "")
 MAX_USER_ID = os.environ.get("MAX_USER_ID", "")
-MAX_API = "https://platform-api2.max.ru"
+MAX_API = "https://botapi.max.ru"
 LOG = os.environ.get("LEAD_LOG", "/var/lib/lamon/leads.jsonl")
 PORT = int(os.environ.get("LISTEN_PORT", "8081"))
 
