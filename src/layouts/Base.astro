@@ -10,8 +10,9 @@ interface Props {
   image?: string; // абсолютный путь для og:image
   applyHref?: string;
   cta?: string;
+  standalone?: boolean; // рекламный лендинг: без ссылок на сайт, noindex
 }
-const { title, description, image = "/images/og-default.svg", applyHref = "/#apply", cta = "Записаться на звонок" } = Astro.props;
+const { title, description, image = "/images/og-default.svg", applyHref = "/#apply", cta = "Записаться на звонок", standalone = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 <!doctype html>
@@ -22,6 +23,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
+  {standalone && <meta name="robots" content="noindex, nofollow" />}
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content={title} />
@@ -33,7 +35,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <Header applyHref={applyHref} cta={cta} />
+  <Header applyHref={applyHref} cta={cta} standalone={standalone} />
   <slot />
   <Footer />
 </body>
