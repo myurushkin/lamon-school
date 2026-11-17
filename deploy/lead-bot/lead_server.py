@@ -11,6 +11,9 @@ POST /api/lead  {"name": "...", "phone": "+7 (XXX) XXX-XX-XX"}
 Узнать свой MAX user_id (после того как написали боту):  python3 lead_server.py --find-max-user
 """
 import html
+import http.client
+import socket
+import ssl
 import json, os, re, time, urllib.request, urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from collections import defaultdict, deque
@@ -34,17 +37,52 @@ def too_many(ip: str) -> bool:
     return len(q) > 5
 
 
+TG_API_IPS = [x for x in os.environ.get("TG_API_IPS", "149.154.167.220,149.154.167.99,149.154.166.110").split(",") if x]
+TG_HOST = "api.telegram.org"
+
+
+class _PinnedHTTPS(http.client.HTTPSConnection):
+    """HTTPS к заданному IP с SNI/проверкой сертификата по настоящему имени хоста."""
+
+    def __init__(self, ip: str, **kw):
+        super().__init__(ip, 443, **kw)
+        self._sni = TG_HOST
+
+    def connect(self):
+        sock = socket.create_connection((self.host, self.port), self.timeout)
+        self.sock = self._context.wrap_socket(sock, server_hostname=self._sni)
+
+
+def tg_api(method: str, params: dict) -> dict | None:
+    """Вызов Bot API: сначала по DNS, затем по запасным IP (с российских серверов часть адресов недоступна)."""
+    if not TOKEN:
+        return None
+    body = urllib.parse.urlencode(params).encode()
+    path = f"/bot{TOKEN}/{method}"
+    hdr = {"Content-Type": "application/x-www-form-urlencoded", "Host": TG_HOST}
+    ctx = ssl.create_default_context()
+    attempts = [None] + TG_API_IPS
+    for ip in attempts:
+        try:
+            conn = http.client.HTTPSConnection(TG_HOST, timeout=6, context=ctx) if ip is None else _PinnedHTTPS(ip, timeout=6, context=ctx)
+            conn.request("POST", path, body=body, headers=hdr)
+            r = conn.getresponse()
+            data = json.loads(r.read().decode() or "{}")
+            conn.close()
+            if r.status == 200 and data.get("ok"):
+                return data
+            print(f"telegram {method} via {ip or 'dns'}: HTTP {r.status} {data.get('description', '')}", flush=True)
+            if r.status in (400, 401, 403, 404):
+                return None  # ошибка запроса, а не сети — другие адреса не помогут
+        except Exception as e:  # noqa: BLE001
+            print(f"telegram {method} via {ip or 'dns'}: {e}", flush=True)
+    return None
+
+
 def tg_send(text: str) -> bool:
     if not TOKEN or not CHAT_ID:
         return False
-    data = urllib.parse.urlencode({"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML"}).encode()
-    req = urllib.request.Request(f"https://api.telegram.org/bot{TOKEN}/sendMessage", data=data)
-    try:
-        with urllib.request.urlopen(req, timeout=10) as r:
-            return r.status == 200
-    except Exception as e:  # noqa: BLE001
-        print("telegram error:", e, flush=True)
-        return False
+    return tg_api("sendMessage", {"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML"}) is not None
 
 
 def max_send(text: str) -> bool:
