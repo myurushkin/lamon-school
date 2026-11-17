@@ -39,6 +39,8 @@ def too_many(ip: str) -> bool:
 
 TG_API_IPS = [x for x in os.environ.get("TG_API_IPS", "149.154.167.220,149.154.167.99,149.154.166.110").split(",") if x]
 TG_HOST = "api.telegram.org"
+TG_PROXY_URL = os.environ.get("TG_PROXY_URL", "").rstrip("/")
+TG_PROXY_KEY = os.environ.get("TG_PROXY_KEY", "")
 
 
 class _PinnedHTTPS(http.client.HTTPSConnection):
@@ -61,6 +63,22 @@ def tg_api(method: str, params: dict) -> dict | None:
     path = f"/bot{TOKEN}/{method}"
     hdr = {"Content-Type": "application/x-www-form-urlencoded", "Host": TG_HOST}
     ctx = ssl.create_default_context()
+    if TG_PROXY_URL and TG_PROXY_KEY:
+        try:
+            req = urllib.request.Request(TG_PROXY_URL + path, data=body, method="POST",
+                                         headers={**hdr, "Host": TG_PROXY_URL.split("//", 1)[1], "x-proxy-key": TG_PROXY_KEY})
+            with urllib.request.urlopen(req, timeout=10) as r:
+                data = json.loads(r.read().decode() or "{}")
+                if data.get("ok"):
+                    return data
+                print(f"telegram {method} via proxy: {data.get('description', '')}", flush=True)
+                return None
+        except urllib.error.HTTPError as e:
+            print(f"telegram {method} via proxy: HTTP {e.code}", flush=True)
+            if e.code in (400, 401, 403, 404):
+                return None
+        except Exception as e:  # noqa: BLE001
+            print(f"telegram {method} via proxy: {e}", flush=True)
     attempts = [None] + TG_API_IPS
     for ip in attempts:
         try:
