@@ -1,5 +1,6 @@
 // Преподаватели Lamon. Поля с TODO — заполнить реальными данными.
 export interface TeamMember {
+  hidden?: boolean;
   id: string;
   name: string;
   role: string;
@@ -29,6 +30,7 @@ export const team: TeamMember[] = [
   },
   {
     id: "bachurin",
+    hidden: true, // пока не показываем
     name: "Бачурин Станислав Сергеевич",
     role: "Биомоделирование",
     bio: "",

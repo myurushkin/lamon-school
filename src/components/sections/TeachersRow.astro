@@ -8,7 +8,7 @@ import { team } from "../../data/team";
       <h2>Учат учёные-исследователи и&nbsp;практики из&nbsp;индустрии</h2>
     </div>
     <div class="teachers-grid">
-      {team.map((p) => (
+      {team.filter((p: any) => !p.hidden).map((p) => (
         <article class="teacher">
           {p.photo
             ? <img src={p.photo} alt={p.name} width="600" height="600" loading="lazy" />
