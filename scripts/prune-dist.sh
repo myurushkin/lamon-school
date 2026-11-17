@@ -3,7 +3,7 @@
 # Список публичных страниц — PUBLIC_PAGES (каталоги внутри dist, корень всегда остаётся).
 set -e
 cd "$(dirname "$0")/../dist"
-PUBLIC_PAGES="${PUBLIC_PAGES:-students-a}"
+PUBLIC_PAGES="${PUBLIC_PAGES:-students}"
 for d in */; do
   d="${d%/}"
   case " _astro images people partners vendor $PUBLIC_PAGES " in

@@ -1,69 +1,55 @@
 ---
+// Вариант A «Ландшафт»: линии уровня седловой функции, анимированная поверхность,
+// фото во всю ширину, чёрная секция задач, синяя форма.
+import "../../styles/landing.css";
 import Base from "../../layouts/Base.astro";
-import Case from "../../components/Case.astro";
+import Contours from "../../components/Contours.astro";
+import HeroFigure from "../../components/sections/HeroFigure.astro";
 import TeachersRow from "../../components/sections/TeachersRow.astro";
 import PlacesSection from "../../components/sections/PlacesSection.astro";
 import OfferSection from "../../components/sections/OfferSection.astro";
-
-const tasks = [
-  { n: "01", title: "Shared tasks конференций", text: "Готовые задачи воркшопов международных конференций по NLP: постановка, данные и дедлайн уже есть. Не надо придумывать, что делать, только как. Результат команды — статья на воркшопе и поездка её представлять.", items: ["Детекция манипуляций в промптах", "Оценка и проверка ответов LLM", "Поиск и извлечение фактов из текстов"] },
-  { n: "02", title: "R&D-задачи реальных продуктов", text: "Рискованные идеи из продуктов BroutonLab, на которые у инженеров нет времени: может не получиться, а если получится, будет заметно лучше того, что есть. Данные и постановка настоящие.", items: ["Признаки из фото через визуально-языковые модели", "Агентная система для построения таксономий", "Дистилляция сигналов больших моделей в маленькие"] },
-  { n: "03", title: "Исследовательские темы", text: "Открытые вопросы по направлениям, в которых работают руководители: что происходит сейчас в мировой науке и что ещё никто не проверил.", items: ["Retrieval, RAG и реранкинг", "Агенты и инструменты для LLM", "Оптимизация и квантизация моделей"] },
-];
-const steps = [
-  { when: "Первые встречи", title: "Выбираешь направление", text: "Каждый рассказывает, что умеет и что хочет сделать. Вместе с руководителем выбираешь задачу и команду. Программа не шаблонная: она собирается под задачи конкретной группы." },
-  { when: "Каждую неделю", title: "Семинар", text: "Команды показывают, что сделали за неделю, разбирают тупики, советуют друг другу. Здесь же короткие разборы инструментов, когда они нужны для дела, а не по учебному плану." },
-  { when: "Между семинарами", title: "Работа над задачей", text: "В лаборатории на мехмате, в офисе или удалённо. Руководитель на связи, когда ты упёрся. Темы, которые нужны для задачи, изучаешь сам, непонятное спрашиваешь." },
-  { when: "Перед дедлайном", title: "Статья и выступление", text: "Руководитель проверяет текст и презентацию до отправки. Потом конференция, где ты представляешь работу сам." },
-];
-const gains = [
-  { title: "Первая конференция рано, а не после магистратуры", text: "Чем раньше ты попадёшь на сильную конференцию, тем быстрее поймёшь, как устроена наука на самом деле. После неё вопросов «что делать» уже не остаётся." },
-  { title: "Публикации и знакомства", text: "Статья с тобой в авторах и люди из лабораторий со всего мира, с которыми ты говорил лично. Так открываются стажировки и магистратура там, куда без публикаций не зовут." },
-  { title: "Опыт для работы к концу второго курса", text: "Ты проходишь все стадии: поиск задачи, эксперименты, код, текст, выступление. Это и есть опыт, который спрашивают на собеседованиях, а не список прослушанных предметов." },
-  { title: "Свои люди", text: "Если тебе одному в группе нравится ML, здесь ты не один. Рядом те, кто делает то же самое, и те, кто уже прошёл этот путь." },
-];
+import { hero, caseBlock, tasks, steps, gains, route, honest, offer, differ, differTitle } from "../../data/students";
 ---
-<Base
-  title="Lamon для студентов — исследования в ИИ с первого курса"
-  description="Семинар и команды, которые делают исследования в генеративном ИИ и доводят их до международных конференций. Для студентов 1–2 курса и школьников, которые уже пишут код. Ростов-на-Дону и онлайн."
-  applyHref="#apply"
-  standalone
->
-<main id="top">
-  <section class="hero hero-simple">
+<Base title="Lamon для студентов — вариант A" description="Исследования в ИИ с первого курса. Ростов-на-Дону и онлайн." applyHref="#apply" standalone>
+<main id="top" class="landing">
+  <section class="lhero">
+    <Contours />
     <div class="wrap">
-      <p class="eyebrow">Для студентов 1–2 курса и школьников, которые уже пишут код</p>
-      <h1>Займись исследованиями в&nbsp;ИИ на&nbsp;первом курсе, а&nbsp;не&nbsp;после магистратуры</h1>
-      <p class="lead">В Ростове почти негде заниматься генеративным ИИ на мировом уровне. Lamon это место: семинар и небольшие команды, которые делают настоящие исследования и доводят их до международных конференций. Ведут исследователи, чьи работы приняты на конференции уровня A*.</p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href="#apply">Записаться на звонок</a>
-        <a class="btn btn-ghost" href="#tasks">Какие задачи</a>
+      <div>
+        <p class="kicker">{hero.kicker}</p>
+        <h1>{hero.h1}</h1>
+        <p class="lead">{hero.lead}</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#apply">Записаться на звонок</a>
+          <a class="btn btn-ghost" href="#tasks">Какие задачи</a>
+        </div>
+        <div class="facts">{hero.facts.map((f) => <span>{f}</span>)}</div>
       </div>
-      <div class="facts">
-        <span>Ростов-на-Дону и онлайн</span>
-        <span>Отбор по навыкам, а не по курсу</span>
-        <span>Небольшие команды</span>
-      </div>
+      <HeroFigure />
     </div>
   </section>
 
-  <Case />
+  <section class="lcase">
+    <img src="/images/tracks/conference-hall.webp" alt="Пленарный зал EMNLP 2026" width="1600" height="1067" loading="eager" />
+    <div class="stamp">{caseBlock.stamp}</div>
+    <div class="wrap"><div class="text">
+      <h2>{caseBlock.title}</h2>
+      <p class="lead">{caseBlock.text}</p>
+      <p class="paper">Работа: «{caseBlock.paper}»</p>
+    </div></div>
+  </section>
 
-  <section class="sec" id="tasks">
+  <section class="sec dark has-bg" id="tasks">
+    <Contours stroke="#3b6cf0" opacity={0.35} />
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">Чем ты будешь заниматься</p>
         <h2>Задачи уже есть. Нужны те, кто их сделает</h2>
-        <p class="lead">Самое сложное в науке — найти задачу, которая того стоит. Эту часть мы берём на себя: у каждой команды есть постановка, данные и понятный результат.</p>
+        <p class="lead">Самое сложное в науке — найти задачу, которая того стоит. Эту часть мы берём на себя: у каждой команды с первого дня есть постановка задачи, данные и понятный результат.</p>
       </div>
       <div class="tasks">
         {tasks.map((t) => (
-          <div class="col">
-            <span class="n">{t.n}</span>
-            <h3>{t.title}</h3>
-            <p>{t.text}</p>
-            <ul>{t.items.map((i) => <li>{i}</li>)}</ul>
-          </div>
+          <div class="col"><span class="n">{t.n}</span><h3>{t.title}</h3><p>{t.text}</p><ul>{t.items.map((i) => <li>{i}</li>)}</ul></div>
         ))}
       </div>
     </div>
@@ -73,30 +59,29 @@ const gains = [
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">Как это устроено</p>
-        <h2>Не лекции, а работа над задачей вместе с теми, кто уже умеет</h2>
-        <p class="lead">Мы не читаем курс по математике и программированию. Мы учим искать информацию, выбирать инструменты, ставить эксперименты и доводить до результата, который можно показать.</p>
+        <h2>Как это устроено: задача, команда и руководитель на связи</h2>
+        <p class="lead">Теорию разбираем по ходу работы, когда она нужна для задачи. Главное, чему учим: находить нужную информацию, выбирать инструменты, ставить эксперименты и доводить работу до результата, который можно показать.</p>
       </div>
       <div class="steps">
-        {steps.map((s) => (
-          <div class="step">
-            <div class="step-when">{s.when}</div>
-            <div><h3>{s.title}</h3><p>{s.text}</p></div>
-          </div>
-        ))}
+        {steps.map((s) => (<div class="step"><div class="step-when">{s.when}</div><div><h3>{s.title}</h3><p>{s.text}</p></div></div>))}
       </div>
     </div>
   </section>
 
   <section class="sec" id="gains">
     <div class="wrap">
-      <div class="sec-head">
-        <p class="eyebrow">Что это даёт</p>
-        <h2>Опыт, который не получить на парах</h2>
+      <div class="sec-head"><p class="eyebrow">Что это даёт</p><h2>Опыт, который не получить на парах</h2></div>
+      <div class="gains">
+        {gains.map((g) => (<div class="gain"><span class="mark"></span><h3>{g.title}</h3><p>{g.text}</p></div>))}
       </div>
-      <div class="cols two">
-        {gains.map((g) => (
-          <div class="col"><h3>{g.title}</h3><p>{g.text}</p></div>
-        ))}
+    </div>
+  </section>
+
+  <section class="sec" id="differ" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Чем это отличается</p><h2>{differTitle}</h2></div>
+      <div class="cols">
+        {differ.map((d) => (<div class="col"><h3>{d.title}</h3><p>{d.text}</p></div>))}
       </div>
     </div>
   </section>
@@ -108,36 +93,23 @@ const gains = [
         <h2>Куда подаём работы в 2027 году</h2>
         <p class="lead">Работы, которые команды начинают сейчас, готовятся к воркшопам и shared tasks конференций 2027 года. Чтобы быть автором, нужно войти в команду до старта задачи.</p>
       </div>
-      <div class="next">
-        <div class="row"><div class="when">Зима 2026/27</div><p><b>Старт команд</b>Выбор задач, распределение ролей, первые эксперименты.</p></div>
-        <div class="row"><div class="when">Май 2027</div><p><b>COLING 2027, Макао</b>Международная конференция по компьютерной лингвистике, 9–14 мая. Воркшопы и shared tasks, подача зимой.</p></div>
-        <div class="row"><div class="when">Август 2027</div><p><b>ACL 2027, Киото</b>Главная конференция года по обработке языка, 17–22 августа. Подача в воркшопы весной.</p></div>
-        <div class="row"><div class="when">Осень 2027</div><p><b>EMNLP 2027</b>Конференция, на которой наша работа была принята в 2026 году. Место и даты объявят позже.</p></div>
+      <div class="route">
+        {route.map((r) => (<div class={`stop ${r.blue ? "blue" : ""}`}><p class="date">{r.date}</p><p class="place">{r.place} · {r.sub}</p><p>{r.text}</p></div>))}
       </div>
     </div>
   </section>
 
-  <section class="sec" id="honest">
+  <section class="sec wash" id="honest">
     <div class="wrap">
-      <div class="sec-head">
-        <p class="eyebrow">Честно</p>
-        <h2>Что мы не обещаем</h2>
-      </div>
-      <div class="honest">
-        <div class="rule"><b>Не гарантируем публикацию</b><p>Решение принимают рецензенты. Мы гарантируем, что работа будет сделана по-настоящему и доведена до подачи, а дальше зависит от идеи и от тебя.</p></div>
-        <div class="rule"><b>Не готовим к сессии и не заменяем университет</b><p>Фундамент даёт вуз. Мы даём то, чего в вузе нет: реальную задачу, команду и людей, которые уже прошли этот путь.</p></div>
-        <div class="rule"><b>Берём не всех и отчисляем за прогулы</b><p>Нужны базовый Python и желание разбираться. Команда, в которой перестают работать, распускается. Так держится уровень группы, ради которого сюда идут.</p></div>
-      </div>
+      <div class="sec-head"><p class="eyebrow">Честно</p><h2>Что мы не обещаем</h2></div>
+      <div class="honest">{honest.map((h) => (<div class="rule"><b>{h.b}</b><p>{h.p}</p></div>))}</div>
     </div>
   </section>
 
   <TeachersRow />
   <PlacesSection />
-  <OfferSection
-    eyebrow="Запись"
-    title="Хочешь попасть в команду?"
-    lead="Запишись на звонок. Расскажем, какие задачи стартуют ближайшими, что нужно уметь на входе и как проходит отбор."
-    source="students"
-  />
+  <div class="offer-blue">
+    <OfferSection eyebrow="Запись" title={offer.title} lead={offer.lead} source="students" />
+  </div>
 </main>
 </Base>
