@@ -46,7 +46,7 @@ export const team: TeamMember[] = [
   {
     id: "chekin",
     name: "Чекин Илья Сергеевич",
-    photo: "/people/ilya.webp",
+    photo: "/people/ilya-v2.webp",
     role: "Исследования в NLP",
     bio: "",
     regalia: [
