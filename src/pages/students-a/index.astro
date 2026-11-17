@@ -8,7 +8,7 @@ import HeroFigure from "../../components/sections/HeroFigure.astro";
 import TeachersRow from "../../components/sections/TeachersRow.astro";
 import PlacesSection from "../../components/sections/PlacesSection.astro";
 import OfferSection from "../../components/sections/OfferSection.astro";
-import { hero, caseBlock, tasks, steps, gains, route, honest, offer, differ } from "../../data/students";
+import { hero, caseBlock, tasks, steps, gains, route, honest, offer, differ, differTitle } from "../../data/students";
 ---
 <Base title="Lamon для студентов — вариант A" description="Исследования в ИИ с первого курса. Ростов-на-Дону и онлайн." applyHref="#apply" standalone>
 <main id="top" class="landing">
@@ -79,7 +79,7 @@ import { hero, caseBlock, tasks, steps, gains, route, honest, offer, differ } fr
 
   <section class="sec" id="differ" style="border-top:1px solid var(--line)">
     <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">Чем это отличается</p><h2>Не курс, не кружок и не лаборатория</h2></div>
+      <div class="sec-head"><p class="eyebrow">Чем это отличается</p><h2>{differTitle}</h2></div>
       <div class="cols">
         {differ.map((d) => (<div class="col"><h3>{d.title}</h3><p>{d.text}</p></div>))}
       </div>
