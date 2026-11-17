@@ -76,7 +76,7 @@
 /* честно: голубая заливка */
 .wash{background:var(--wash)}
 .wash .honest{max-width:none;display:grid;gap:18px}
-@media(min-width:760px){.wash .honest{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:760px){.wash .honest{grid-template-columns:repeat(2,1fr);gap:22px 32px}}
 .wash .rule{border-left:0;border-top:3px solid #000;padding:18px 0 0}
 .wash .rule b{font-size:19px;letter-spacing:-.015em;margin-bottom:8px}
 .wash .rule p{max-width:40ch}
