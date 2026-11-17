@@ -37,6 +37,9 @@ const {
         <label>Телефон
           <input name="phone" id="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" maxlength="18">
         </label>
+        <label>Напишите о своей ситуации
+          <textarea name="about" maxlength="1000" placeholder="Кто вы, что уже умеете и чего хотите. Пара предложений достаточно."></textarea>
+        </label>
         <button class="btn btn-primary" type="submit">{button}</button>
         <p class="form-note">Нажимая кнопку, вы соглашаетесь, что мы свяжемся с вами по указанному телефону. Данные никому не передаём.</p>
         <div class="ok" id="ok">Спасибо! Заявка сформирована — мы свяжемся с вами в течение двух дней.</div>
@@ -87,7 +90,7 @@ const {
     ev.preventDefault();
     const f = new FormData(form);
     const name = String(f.get('name')||'').trim(), phone = String(f.get('phone')||'').trim(), site = String(f.get('site')||'');
-    const source = String(f.get('source')||''), role = String(f.get('role')||'');
+    const source = String(f.get('source')||''), role = String(f.get('role')||''), about = String(f.get('about')||'').trim().slice(0,1000);
     const doneText = (document.getElementById('apply') as HTMLElement | null)?.dataset.done || 'Спасибо! Заявка отправлена.';
     const btnText = btn0?.textContent || '';
     const digits = phone.replace(/\D/g,'');
@@ -98,7 +101,7 @@ const {
     const ok = document.getElementById('ok');
     if(btn){ btn.disabled = true; btn.textContent = 'Отправляем…'; }
     try {
-      const r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, site, source, role }) });
+      const r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, site, source, role, about }) });
       const data = await r.json().catch(() => ({}));
       if(!r.ok || !data.ok) throw new Error(data.error || 'Не удалось отправить');
       if(ok){ ok.textContent = doneText; ok.style.display = 'block'; }
@@ -108,7 +111,7 @@ const {
       // запасной путь: письмо через почтовый клиент
       if(ok){ ok.textContent = 'Не получилось отправить автоматически. Откроем письмо — просто нажмите «Отправить».'; ok.style.display = 'block'; }
       if(btn){ btn.disabled = false; btn.textContent = btnText; }
-      const body = [`Имя: ${name}`, `Телефон: ${phone}`, role && `Кто: ${role}`, `Страница: ${source}`].filter(Boolean).join('\n');
+      const body = [`Имя: ${name}`, `Телефон: ${phone}`, role && `Кто: ${role}`, about && `О ситуации: ${about}`, `Страница: ${source}`].filter(Boolean).join('\n');
       window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent(btnText+': '+name)}&body=${encodeURIComponent(body)}`;
     }
   });
