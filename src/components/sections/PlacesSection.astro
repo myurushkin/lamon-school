@@ -50,7 +50,8 @@ const YKEY = import.meta.env.PUBLIC_YMAPS_KEY ?? "";
           minLon=Math.min(minLon,pt.lon); maxLon=Math.max(maxLon,pt.lon); minLat=Math.min(minLat,pt.lat); maxLat=Math.max(maxLat,pt.lat);
         });
         var padLon=(maxLon-minLon)*0.4||0.005, padLat=(maxLat-minLat)*0.4||0.005;
-        map.setLocation({ bounds: [[minLon-padLon, minLat-padLat],[maxLon+padLon, maxLat+padLat]], duration: 0 });
+        if (pts.length === 1) map.setLocation({ center: [pts[0].lon, pts[0].lat], zoom: 13, duration: 0 });
+        else map.setLocation({ bounds: [[minLon-padLon, minLat-padLat],[maxLon+padLon, maxLat+padLat]], duration: 0 });
       });
     }
     function initLeaflet(){
@@ -66,7 +67,8 @@ const YKEY = import.meta.env.PUBLIC_YMAPS_KEY ?? "";
           pt.el.addEventListener('mouseleave', function(){ m.closeTooltip(); });
           return m;
         });
-        map.fitBounds(L.featureGroup(group).getBounds().pad(0.35));
+        if (pts.length === 1) map.setView([pts[0].lat, pts[0].lon], 13);
+        else map.fitBounds(L.featureGroup(group).getBounds().pad(0.35));
       });
     }
     function start(){
