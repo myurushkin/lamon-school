@@ -110,20 +110,22 @@ class H(BaseHTTPRequestHandler):
             return self._json(400, {"ok": False, "error": "Некорректный запрос."})
         name = str(payload.get("name", "")).strip()[:80]
         phone = str(payload.get("phone", "")).strip()[:32]
+        source = re.sub(r"[^\w\-]", "", str(payload.get("source", "")))[:40]
+        role = str(payload.get("role", "")).strip()[:40]
         digits = re.sub(r"\D", "", phone)
         if not name or len(digits) != 11:
             return self._json(400, {"ok": False, "error": "Нужны имя и полный номер телефона."})
         honeypot = str(payload.get("site", "")).strip()
         if honeypot:  # поле, которое человек не заполняет
             return self._json(200, {"ok": True})
-        rec = {"ts": time.strftime("%Y-%m-%d %H:%M:%S"), "name": name, "phone": phone, "ip": ip,
+        rec = {"ts": time.strftime("%Y-%m-%d %H:%M:%S"), "name": name, "phone": phone, "source": source, "role": role, "ip": ip,
                "ua": self.headers.get("User-Agent", "")[:160], "page": self.headers.get("Referer", "")[:200]}
         os.makedirs(os.path.dirname(LOG), exist_ok=True)
         with open(LOG, "a", encoding="utf-8") as f:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
         sent = notify(
-            f"<b>Заявка на звонок</b>\nИмя: {name}\nТелефон: <code>{phone}</code>\nВремя: {rec['ts']}",
-            f"**Заявка на звонок**\nИмя: {name}\nТелефон: `{phone}`\nВремя: {rec['ts']}",
+            f"<b>Заявка</b> · {source or 'main'}{' · '+role if role else ''}\nИмя: {name}\nТелефон: <code>{phone}</code>\nВремя: {rec['ts']}",
+            f"**Заявка** · {source or 'main'}{' · '+role if role else ''}\nИмя: {name}\nТелефон: `{phone}`\nВремя: {rec['ts']}",
         )
         print("lead:", rec, "sent:", sent, flush=True)
         self._json(200, {"ok": True, **sent})

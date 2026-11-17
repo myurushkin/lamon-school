@@ -8,8 +8,10 @@ interface Props {
   title: string;
   description: string;
   image?: string; // абсолютный путь для og:image
+  applyHref?: string;
+  cta?: string;
 }
-const { title, description, image = "/images/og-default.svg" } = Astro.props;
+const { title, description, image = "/images/og-default.svg", applyHref = "/#apply", cta = "Записаться на звонок" } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 <!doctype html>
@@ -31,7 +33,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <Header />
+  <Header applyHref={applyHref} cta={cta} />
   <slot />
   <Footer />
 </body>

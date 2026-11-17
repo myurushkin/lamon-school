@@ -1,8 +1,10 @@
 ---
+interface Props { applyHref?: string; cta?: string }
+const { applyHref = "/#apply", cta = "Записаться на звонок" } = Astro.props;
 ---
 <header>
   <div class="wrap nav">
     <a class="logo" href="/"><b>Lamon</b><span>Школа разработки искусственного интеллекта</span></a>
-    <a class="btn btn-primary btn-sm" href="/#apply">Записаться на звонок</a>
+    <a class="btn btn-primary btn-sm" href={applyHref}>{cta}</a>
   </div>
 </header>
