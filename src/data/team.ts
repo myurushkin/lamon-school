@@ -25,7 +25,7 @@ export const team: TeamMember[] = [
       "больше 15 лет пишет код, который работает в продакшене",
     ],
     teaches: ["генеративный ИИ", "ИИ-стартап"],
-    photo: "/people/michael-v2.webp",
+    photo: "/people/michael-v3.webp",
     initials: "МЮ",
   },
   {
