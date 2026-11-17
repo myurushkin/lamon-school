@@ -52,7 +52,7 @@ export const team: TeamMember[] = [
     regalia: [
       "AI/ML-исследователь с 5-летним опытом",
       "аспирант мехмата ЮФУ",
-      "первый соавтор статьи на EMNLP 2026, Industry Track",
+      "первый автор статьи на EMNLP 2026, Industry Track",
     ],
     teaches: ["генеративный ИИ"],
     initials: "ИЧ",
