@@ -32,6 +32,9 @@ jobs:
           chmod 600 ~/.ssh/deploy
           ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
 
+      - name: Prune dist to public pages
+        run: sh scripts/prune-dist.sh
+
       - name: Upload dist
         run: |
           rsync -az --delete \
