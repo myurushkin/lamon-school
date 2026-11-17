@@ -105,6 +105,7 @@ const {
       const data = await r.json().catch(() => ({}));
       if(!r.ok || !data.ok) throw new Error(data.error || 'Не удалось отправить');
       if(ok){ ok.textContent = doneText; ok.style.display = 'block'; }
+      try { if(typeof window.ym === 'function') window.ym(114311096, 'reachGoal', 'lead', { source, role }); } catch (_) {}
       form.reset();
       if(btn){ btn.textContent = 'Заявка отправлена'; }
     } catch (e) {
