@@ -1,0 +1,126 @@
+---
+// Вариант B «Редакционный»: фото зала как обложка, серифный заголовочный шрифт,
+// крупные даты, чёрная полоса с утверждением, белые секции с толстыми линейками.
+import "../../styles/landing.css";
+import Base from "../../layouts/Base.astro";
+import TeachersRow from "../../components/sections/TeachersRow.astro";
+import PlacesSection from "../../components/sections/PlacesSection.astro";
+import OfferSection from "../../components/sections/OfferSection.astro";
+import { hero, caseBlock, tasks, steps, gains, route, honest, offer } from "../../data/students";
+---
+<Base title="Lamon для студентов — вариант B" description="Исследования в ИИ с первого курса. Ростов-на-Дону и онлайн." applyHref="#apply" standalone>
+<style is:global>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,500;0,600;1,500&display=swap');
+.edit h1,.edit h2,.edit .gain h3,.edit .stop .date,.edit .state p{font-family:"IBM Plex Serif",Georgia,serif;font-weight:600;letter-spacing:-.02em}
+.edit .cover{position:relative;min-height:720px;max-height:860px;display:flex;align-items:flex-end;background:#000;color:#fff;overflow:hidden}
+.edit .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;opacity:.7}
+.edit .cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1) 0%,rgba(0,0,0,.2) 45%,rgba(0,0,0,.88) 100%)}
+.edit .cover .wrap{position:relative;z-index:1;padding-top:140px;padding-bottom:64px;width:100%}
+.edit .cover h1{font-size:clamp(44px,6.6vw,88px);line-height:.96;max-width:15ch;margin:0 0 26px;color:#fff}
+.edit .cover .lead{color:rgba(255,255,255,.85);max-width:52ch;font-size:clamp(18px,1.9vw,22px);margin:0 0 34px}
+.edit .cover .kicker{display:inline-block;border:1px solid rgba(255,255,255,.5);padding:6px 12px;font-size:14px;margin-bottom:26px;border-radius:3px}
+.edit .cover .btn-ghost{border-color:#fff;color:#fff}
+.edit .cover .btn-ghost:hover{background:#fff;color:#000}
+.edit .cover .facts{color:rgba(255,255,255,.75)}
+.edit .cover .facts span::before{background:#fff}
+.edit .cover .caption{position:absolute;right:16px;bottom:16px;font-size:12px;color:rgba(255,255,255,.55);z-index:1}
+.edit .state{background:#000;color:#fff;padding:72px 0}
+.edit .state p{font-size:clamp(28px,4vw,54px);line-height:1.08;max-width:24ch;margin:0}
+.edit .state small{display:block;margin-top:22px;font-size:15px;color:rgba(255,255,255,.6);font-family:"IBM Plex Sans",sans-serif;max-width:60ch}
+.edit .tasks .col{border:0;border-top:3px solid #000;border-radius:0;padding:22px 0 0}
+.edit .tasks .col .n{color:var(--blue);font-family:"IBM Plex Sans",sans-serif;font-size:14px;font-weight:600;letter-spacing:0}
+.edit .tasks .col h3{font-size:24px;font-family:"IBM Plex Serif",serif}
+.edit .stop{border-top:1px solid #000}
+.edit .stop.blue .date{color:var(--blue)}
+.edit .stop .date{font-size:clamp(40px,4.4vw,58px)}
+.edit .wash{background:#fff;border-top:3px solid #000}
+.edit .wash .rule{border-top:1px solid var(--line)}
+.edit .photo-row{display:grid;gap:12px;margin-top:56px}
+@media(min-width:760px){.edit .photo-row{grid-template-columns:1.2fr .8fr .8fr}}
+.edit .photo-row img{width:100%;height:100%;object-fit:cover;display:block;aspect-ratio:4/3}
+.edit .photo-row figcaption{font-size:13px;color:var(--ink-3);margin-top:6px}
+</style>
+<main id="top" class="landing edit">
+  <section class="cover">
+    <img src="/images/tracks/conference-hall.webp" alt="Пленарный зал EMNLP 2026 в Будапеште" width="1600" height="1067" loading="eager" />
+    <div class="wrap">
+      <p class="kicker">{hero.kicker}</p>
+      <h1>{hero.h1}</h1>
+      <p class="lead">{hero.lead}</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#apply">Записаться на звонок</a>
+        <a class="btn btn-ghost" href="#tasks">Какие задачи</a>
+      </div>
+      <div class="facts">{hero.facts.map((f) => <span>{f}</span>)}</div>
+    </div>
+    <div class="caption">EMNLP 2026, Будапешт. Фото наше.</div>
+  </section>
+
+  <section class="state">
+    <div class="wrap">
+      <p>{caseBlock.title}</p>
+      <small>{caseBlock.text} Работа: «{caseBlock.paper}».</small>
+    </div>
+  </section>
+
+  <section class="sec" id="tasks">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Чем ты будешь заниматься</p>
+        <h2>Задачи уже есть. Нужны те, кто их сделает</h2>
+        <p class="lead">Самое сложное в науке — найти задачу, которая того стоит. Эту часть мы берём на себя: у каждой команды есть постановка, данные и понятный результат.</p>
+      </div>
+      <div class="tasks">
+        {tasks.map((t) => (<div class="col"><span class="n">{t.n}</span><h3>{t.title}</h3><p>{t.text}</p><ul>{t.items.map((i) => <li>{i}</li>)}</ul></div>))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="how" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Как это устроено</p>
+        <h2>Не лекции, а работа над задачей вместе с теми, кто уже умеет</h2>
+        <p class="lead">Мы не читаем курс по математике и программированию. Мы учим искать информацию, выбирать инструменты, ставить эксперименты и доводить до результата, который можно показать.</p>
+      </div>
+      <div class="steps">
+        {steps.map((s) => (<div class="step"><div class="step-when">{s.when}</div><div><h3>{s.title}</h3><p>{s.text}</p></div></div>))}
+      </div>
+      <div class="photo-row">
+        <figure style="margin:0"><img src="/images/blog/emnlp-2026/ilya-poster.webp" alt="Илья у постера на EMNLP 2026" /><figcaption>Постерная сессия EMNLP 2026</figcaption></figure>
+        <figure style="margin:0"><img src="/images/blog/emnlp-2026/ilya-budapest.webp" alt="Будапешт" /><figcaption>Будапешт, ноябрь 2026</figcaption></figure>
+        <figure style="margin:0"><img src="/images/blog/emnlp-2026/mikhail-budapest.webp" alt="Будапешт" /><figcaption>После доклада</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="gains" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Что это даёт</p><h2>Опыт, который не получить на парах</h2></div>
+      <div class="gains">{gains.map((g) => (<div class="gain"><span class="mark"></span><h3>{g.title}</h3><p>{g.text}</p></div>))}</div>
+    </div>
+  </section>
+
+  <section class="sec" id="next" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Ближайшие цели</p>
+        <h2>Куда подаём работы в 2027 году</h2>
+        <p class="lead">Работы, которые команды начинают сейчас, готовятся к воркшопам и shared tasks конференций 2027 года. Чтобы быть автором, нужно войти в команду до старта задачи.</p>
+      </div>
+      <div class="route">{route.map((r) => (<div class={`stop ${r.blue ? "blue" : ""}`}><p class="date">{r.date}</p><p class="place">{r.place} · {r.sub}</p><p>{r.text}</p></div>))}</div>
+    </div>
+  </section>
+
+  <section class="sec wash" id="honest">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Честно</p><h2>Что мы не обещаем</h2></div>
+      <div class="honest">{honest.map((h) => (<div class="rule"><b>{h.b}</b><p>{h.p}</p></div>))}</div>
+    </div>
+  </section>
+
+  <TeachersRow />
+  <PlacesSection />
+  <OfferSection eyebrow="Запись" title={offer.title} lead={offer.lead} source="students-b" roles={offer.roles} />
+</main>
+</Base>

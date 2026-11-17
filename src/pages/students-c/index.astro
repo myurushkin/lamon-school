@@ -1,0 +1,154 @@
+---
+// Вариант C «Плакат»: сплошные цветные блоки (синий, чёрный, белый), очень крупный шрифт,
+// толстые линейки, никаких карточек. Поверхность в hero, фото только в кейсе.
+import "../../styles/landing.css";
+import Base from "../../layouts/Base.astro";
+import HeroFigure from "../../components/sections/HeroFigure.astro";
+import TeachersRow from "../../components/sections/TeachersRow.astro";
+import PlacesSection from "../../components/sections/PlacesSection.astro";
+import OfferSection from "../../components/sections/OfferSection.astro";
+import { hero, caseBlock, tasks, steps, gains, route, honest, offer } from "../../data/students";
+---
+<Base title="Lamon для студентов — вариант C" description="Исследования в ИИ с первого курса. Ростов-на-Дону и онлайн." applyHref="#apply" standalone>
+<style is:global>
+.poster .phero{display:grid;border-bottom:4px solid #000}
+@media(min-width:900px){.poster .phero{grid-template-columns:1.1fr .9fr;min-height:640px}}
+.poster .phero .text{background:var(--blue);color:#fff;padding:72px 24px 56px}
+@media(min-width:900px){.poster .phero .text{padding:120px 56px 72px calc((100vw - var(--max))/2 + 32px)}}
+.poster .phero h1{font-size:clamp(44px,6.4vw,84px);line-height:.95;letter-spacing:-.04em;max-width:14ch;margin:0 0 28px;color:#fff}
+.poster .phero .lead{color:rgba(255,255,255,.88);max-width:46ch;font-size:clamp(18px,1.8vw,21px);margin:0 0 36px}
+.poster .phero .kicker{display:inline-block;background:#000;color:#fff;padding:6px 12px;font-size:14px;font-weight:600;margin-bottom:28px;border-radius:3px}
+.poster .phero .btn-primary{background:#000;border-color:#000}
+.poster .phero .btn-primary:hover{background:#222}
+.poster .phero .btn-ghost{border-color:#fff;color:#fff}
+.poster .phero .btn-ghost:hover{background:#fff;color:var(--blue)}
+.poster .phero .facts{color:rgba(255,255,255,.8)}
+.poster .phero .facts span::before{background:#fff}
+.poster .phero .figwrap{display:grid;place-items:center;padding:40px 24px;background:#fff}
+@media(max-width:899px){.poster .phero .figwrap{display:none}}
+.poster .phero .hero-fig{max-width:560px;width:100%}
+.poster .pcase{display:grid;background:#000;color:#fff}
+@media(min-width:900px){.poster .pcase{grid-template-columns:1fr 1fr}}
+.poster .pcase img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;aspect-ratio:1;max-height:720px}
+.poster .pcase .text{padding:56px 24px;display:flex;flex-direction:column;justify-content:center}
+@media(min-width:900px){.poster .pcase .text{padding:72px 56px}}
+.poster .pcase h2{color:#fff;font-size:clamp(34px,4.4vw,60px);max-width:16ch}
+.poster .pcase .lead{color:rgba(255,255,255,.8);max-width:46ch}
+.poster .pcase .paper{color:rgba(255,255,255,.55);font-size:14px;margin:18px 0 0}
+.poster .pcase .stamp{display:inline-block;background:var(--blue);color:#fff;font-weight:700;padding:8px 12px;margin-bottom:26px;border-radius:3px;font-size:14px;align-self:flex-start}
+.poster .big{border-bottom:4px solid #000}
+.poster .big h2{font-size:clamp(36px,5vw,68px);max-width:16ch}
+.poster .tasks{gap:0;border-top:4px solid #000;margin-top:0}
+@media(min-width:760px){.poster .tasks{grid-template-columns:repeat(3,1fr)}}
+.poster .tasks .col{border:0;border-radius:0;padding:28px 28px 28px 0;background:transparent}
+@media(min-width:760px){.poster .tasks .col+.col{border-left:1px solid #000;padding-left:28px}}
+.poster .tasks .col .n{font-family:"IBM Plex Sans",sans-serif;font-size:clamp(28px,3vw,40px);font-weight:700;letter-spacing:-.03em;color:var(--blue);margin-bottom:14px}
+.poster .tasks .col h3{font-size:22px}
+.poster .black{background:#000;color:#fff}
+.poster .black h2,.poster .black h3{color:#fff}
+.poster .black .lead,.poster .black p{color:rgba(255,255,255,.78)}
+.poster .black .steps{border-top-color:#fff}
+.poster .black .step{border-bottom-color:rgba(255,255,255,.22)}
+.poster .black .step-when{color:#fff}
+.poster .black .eyebrow{color:#9db4ff}
+.poster .gains{border-top:4px solid #000}
+.poster .gain h3{font-size:clamp(26px,2.8vw,36px)}
+.poster .gain .mark{background:#000;height:4px;width:56px}
+.poster .route{border-top:4px solid #000}
+.poster .stop{border-top:0;padding-top:24px}
+@media(min-width:900px){.poster .stop+.stop{border-left:1px solid #000;padding-left:28px}}
+.poster .stop .date{font-size:clamp(40px,4.6vw,64px)}
+.poster .stop.blue .date{color:var(--blue)}
+.poster .bluewash{background:var(--blue);color:#fff}
+.poster .bluewash h2{color:#fff}
+.poster .bluewash .eyebrow{color:rgba(255,255,255,.7)}
+.poster .bluewash .rule{border-top:3px solid #fff}
+.poster .bluewash .rule b{color:#fff}
+.poster .bluewash .rule p{color:rgba(255,255,255,.85)}
+.poster .offer-black .sec{background:#000;color:#fff}
+.poster .offer-black h2{color:#fff}
+.poster .offer-black .eyebrow{color:#9db4ff}
+.poster .offer-black .lead{color:rgba(255,255,255,.8)}
+.poster .offer-black form{border:0}
+.poster .offer-black label{color:var(--ink-2)}
+.poster .offer-black .form-note{color:var(--ink-3)}
+</style>
+<main id="top" class="landing poster">
+  <section class="phero">
+    <div class="text">
+      <p class="kicker">{hero.kicker}</p>
+      <h1>{hero.h1}</h1>
+      <p class="lead">{hero.lead}</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#apply">Записаться на звонок</a>
+        <a class="btn btn-ghost" href="#tasks">Какие задачи</a>
+      </div>
+      <div class="facts">{hero.facts.map((f) => <span>{f}</span>)}</div>
+    </div>
+    <div class="figwrap"><HeroFigure /></div>
+  </section>
+
+  <section class="pcase">
+    <img src="/images/blog/emnlp-2026/ilya-poster.webp" alt="Ученик школы у постера на EMNLP 2026" width="1200" height="1200" loading="eager" />
+    <div class="text">
+      <span class="stamp">{caseBlock.stamp}</span>
+      <h2>{caseBlock.title}</h2>
+      <p class="lead">{caseBlock.text}</p>
+      <p class="paper">Работа: «{caseBlock.paper}»</p>
+    </div>
+  </section>
+
+  <section class="sec big" id="tasks">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Чем ты будешь заниматься</p>
+        <h2>Задачи уже есть. Нужны те, кто их сделает</h2>
+        <p class="lead">Самое сложное в науке — найти задачу, которая того стоит. Эту часть мы берём на себя: у каждой команды есть постановка, данные и понятный результат.</p>
+      </div>
+      <div class="tasks">{tasks.map((t) => (<div class="col"><span class="n">{t.n}</span><h3>{t.title}</h3><p>{t.text}</p><ul>{t.items.map((i) => <li>{i}</li>)}</ul></div>))}</div>
+    </div>
+  </section>
+
+  <section class="sec black" id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Как это устроено</p>
+        <h2>Не лекции, а работа над задачей вместе с теми, кто уже умеет</h2>
+        <p class="lead">Мы не читаем курс по математике и программированию. Мы учим искать информацию, выбирать инструменты, ставить эксперименты и доводить до результата, который можно показать.</p>
+      </div>
+      <div class="steps">{steps.map((s) => (<div class="step"><div class="step-when">{s.when}</div><div><h3>{s.title}</h3><p>{s.text}</p></div></div>))}</div>
+    </div>
+  </section>
+
+  <section class="sec" id="gains">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Что это даёт</p><h2>Опыт, который не получить на парах</h2></div>
+      <div class="gains">{gains.map((g) => (<div class="gain"><span class="mark"></span><h3>{g.title}</h3><p>{g.text}</p></div>))}</div>
+    </div>
+  </section>
+
+  <section class="sec" id="next" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Ближайшие цели</p>
+        <h2>Куда подаём работы в 2027 году</h2>
+        <p class="lead">Работы, которые команды начинают сейчас, готовятся к воркшопам и shared tasks конференций 2027 года. Чтобы быть автором, нужно войти в команду до старта задачи.</p>
+      </div>
+      <div class="route">{route.map((r) => (<div class={`stop ${r.blue ? "blue" : ""}`}><p class="date">{r.date}</p><p class="place">{r.place} · {r.sub}</p><p>{r.text}</p></div>))}</div>
+    </div>
+  </section>
+
+  <section class="sec bluewash" id="honest">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Честно</p><h2>Что мы не обещаем</h2></div>
+      <div class="honest" style="display:grid;gap:18px;max-width:none">{honest.map((h) => (<div class="rule"><b>{h.b}</b><p>{h.p}</p></div>))}</div>
+    </div>
+  </section>
+
+  <TeachersRow />
+  <PlacesSection />
+  <div class="offer-black">
+    <OfferSection eyebrow="Запись" title={offer.title} lead={offer.lead} source="students-c" roles={offer.roles} />
+  </div>
+</main>
+</Base>

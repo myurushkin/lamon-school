@@ -1,0 +1,112 @@
+/* Рекламные лендинги: тот же шрифт и палитра, больше графики */
+.landing{--blue:#1d4ed8;--blue-deep:#0f2a8a;--wash:#eef2ff;overflow-x:clip}
+.landing h2{font-size:clamp(32px,4.2vw,52px);line-height:1.02;letter-spacing:-.03em;max-width:20ch}
+.landing .sec-head{margin-bottom:48px}
+.landing .eyebrow{color:var(--blue);font-weight:600}
+
+/* контуры */
+.contours{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.has-bg{position:relative;isolation:isolate}
+.has-bg>.wrap{position:relative;z-index:1}
+
+/* hero */
+.lhero{position:relative;padding:72px 0 64px;border-bottom:1px solid var(--line);overflow:hidden}
+@media(min-width:900px){.lhero{padding:104px 0 88px}}
+.lhero .contours{opacity:.9;mask-image:radial-gradient(ellipse 70% 80% at 70% 40%,#000 30%,transparent 75%)}
+.lhero .wrap{display:grid;gap:40px;align-items:center}
+@media(min-width:900px){.lhero .wrap{grid-template-columns:1.15fr .85fr;gap:56px}}
+.lhero h1{font-size:clamp(42px,6vw,78px);line-height:.98;letter-spacing:-.035em;max-width:16ch;margin:0 0 28px}
+.lhero .lead{font-size:clamp(18px,1.9vw,22px);max-width:54ch;margin:0 0 36px}
+.lhero .kicker{display:inline-block;background:#000;color:#fff;padding:6px 12px;font-size:14px;font-weight:600;margin:0 0 26px;border-radius:3px}
+.lhero .hero-fig{max-width:520px;justify-self:end;width:100%}
+.lhero .facts{margin-top:40px}
+@media(max-width:899px){.lhero .hero-fig{display:none}}
+
+/* фото во всю ширину */
+.lcase{position:relative;min-height:620px;max-height:760px;display:flex;align-items:flex-end;color:#fff;background:#000}
+.lcase img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;opacity:.85}
+.lcase::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 0%,rgba(0,0,0,.25) 40%,rgba(0,0,0,.85) 100%)}
+.lcase .wrap{position:relative;z-index:1;padding-top:120px;padding-bottom:56px;width:100%}
+.lcase h2{color:#fff;max-width:18ch;margin-bottom:18px}
+.lcase .lead{color:rgba(255,255,255,.82);max-width:52ch;margin:0}
+.lcase .paper{margin:22px 0 0;font-size:14px;color:rgba(255,255,255,.6);max-width:60ch}
+.lcase .stamp{position:absolute;top:28px;right:16px;z-index:1;background:var(--blue);color:#fff;font-weight:700;font-size:14px;padding:10px 14px;border-radius:3px;line-height:1.2}
+@media(min-width:720px){.lcase .stamp{right:32px;top:36px;font-size:15px}}
+
+/* тёмная секция с задачами */
+.dark{background:#000;color:#fff}
+.dark h2,.dark h3{color:#fff}
+.dark .lead{color:rgba(255,255,255,.72)}
+.dark .contours{opacity:1;mask-image:linear-gradient(90deg,transparent 0%,#000 35%,#000 100%)}
+.dark .tasks .col{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.18);backdrop-filter:blur(2px)}
+.dark .tasks .col p,.dark .tasks .col li{color:rgba(255,255,255,.8)}
+.dark .tasks .col .n{color:var(--blue);font-weight:600;font-size:13px}
+.dark .tasks .col h3{font-size:22px;letter-spacing:-.02em}
+.dark .tasks{margin-top:8px}
+
+/* шаги: крупный маркер времени */
+.landing .steps{border-top:2px solid #000}
+.landing .step{padding:30px 0;border-bottom:1px solid var(--line)}
+@media(min-width:760px){.landing .step{grid-template-columns:240px 1fr;gap:6px 48px}}
+.landing .step-when{font-family:"IBM Plex Sans",sans-serif;font-size:20px;font-weight:700;letter-spacing:-.02em;color:var(--blue);padding-top:0}
+.landing .step h3{font-size:22px}
+.landing .step p{max-width:62ch}
+
+/* выгоды: крупные утверждения */
+.gains{display:grid;gap:0;border-top:2px solid #000}
+@media(min-width:760px){.gains{grid-template-columns:1fr 1fr}}
+.gain{padding:34px 0 34px;border-bottom:1px solid var(--line)}
+@media(min-width:760px){.gain{padding:40px 40px 40px 0}.gain:nth-child(2n){padding-left:40px;border-left:1px solid var(--line)}}
+.gain h3{font-size:clamp(22px,2.2vw,28px);letter-spacing:-.025em;line-height:1.12;margin:0 0 12px;max-width:18ch}
+.gain p{margin:0;color:var(--ink-2);max-width:48ch}
+.gain .mark{display:block;width:40px;height:3px;background:var(--blue);margin-bottom:22px}
+
+/* маршрут конференций */
+.route{display:grid;gap:0}
+@media(min-width:900px){.route{grid-template-columns:repeat(4,1fr)}}
+.stop{position:relative;padding:28px 24px 28px 0;border-top:3px solid #000}
+@media(min-width:900px){.stop{padding-right:32px}}
+.stop.blue{border-top-color:var(--blue)}
+.stop .date{font-size:clamp(34px,3.6vw,46px);font-weight:700;letter-spacing:-.035em;line-height:1;margin:0 0 6px}
+.stop .place{font-size:17px;font-weight:600;margin:0 0 10px}
+.stop p{margin:0;color:var(--ink-2);font-size:15px;max-width:34ch}
+@media(max-width:899px){.stop{border-top-width:1px}.stop:first-child{border-top-width:3px}}
+
+/* честно: голубая заливка */
+.wash{background:var(--wash)}
+.wash .honest{max-width:none;display:grid;gap:18px}
+@media(min-width:760px){.wash .honest{grid-template-columns:repeat(3,1fr)}}
+.wash .rule{border-left:0;border-top:3px solid #000;padding:18px 0 0}
+.wash .rule b{font-size:19px;letter-spacing:-.015em;margin-bottom:8px}
+.wash .rule p{max-width:40ch}
+
+/* программа встречи */
+.landing .agenda{border-top:2px solid #000;max-width:none}
+.landing .agenda .row{padding:26px 0}
+@media(min-width:760px){.landing .agenda .row{grid-template-columns:140px 1fr}}
+.landing .agenda .t{font-family:"IBM Plex Sans",sans-serif;font-size:20px;font-weight:700;color:var(--blue);letter-spacing:-.02em;padding-top:0}
+.landing .agenda b{font-size:22px;letter-spacing:-.02em;margin-bottom:6px}
+.landing .agenda p{max-width:62ch}
+
+/* кому подходит */
+.landing .who .col{border:0;border-top:3px solid #000;border-radius:0;padding:22px 0 0}
+.landing .who .col:nth-child(2){border-top-color:var(--ink-3)}
+.landing .who h3{font-size:22px;letter-spacing:-.02em}
+.landing .who li{margin:8px 0}
+
+/* форма: синяя секция */
+.offer-blue .sec{background:var(--blue);color:#fff;border-top:0}
+.offer-blue .eyebrow{color:rgba(255,255,255,.7)}
+.offer-blue h2{color:#fff}
+.offer-blue .lead{color:rgba(255,255,255,.85)}
+.offer-blue form{border:0;box-shadow:0 30px 60px -30px rgba(0,0,0,.5)}
+.offer-blue label{color:var(--ink-2)}
+.offer-blue .btn-primary{background:#000;border-color:#000}
+.offer-blue .btn-primary:hover{background:#222;border-color:#222}
+.offer-blue .form-note{color:var(--ink-3)}
+.offer-blue .ok{background:#fff}
+
+/* преподаватели и карта на лендинге */
+.landing #people{border-top:1px solid var(--line)}
+
+@media(prefers-reduced-motion:reduce){.landing *{transition:none!important}}
