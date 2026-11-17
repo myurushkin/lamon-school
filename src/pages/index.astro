@@ -1,24 +1,21 @@
 ---
+// Главная временно скрыта: полная версия лежит в /draft/ и дорабатывается.
 import Base from "../layouts/Base.astro";
-import HeroSection from "../components/sections/HeroSection.astro";
-import Case from "../components/Case.astro";
-import TracksSection from "../components/sections/TracksSection.astro";
-import TeachersRow from "../components/sections/TeachersRow.astro";
-import WorksSection from "../components/sections/WorksSection.astro";
-import PlacesSection from "../components/sections/PlacesSection.astro";
+import HeroFigure from "../components/sections/HeroFigure.astro";
 import OfferSection from "../components/sections/OfferSection.astro";
 ---
-<Base
-  title="Lamon — Школа разработки искусственного интеллекта"
-  description="Lamon — лучшая школа в области разработки искусственного интеллекта для школьников и студентов. Исследования уровня A*, ИИ-стартапы, партнёры по всему миру. Запишись на звонок."
->
+<Base title="Lamon — Школа разработки искусственного интеллекта" description="Lamon — школа разработки искусственного интеллекта в Ростове-на-Дону. Для школьников и студентов." applyHref="#apply">
 <main id="top">
-  <HeroSection />
-  <Case />
-  <TracksSection />
-  <TeachersRow />
-  <WorksSection />
-  <PlacesSection />
-  <OfferSection />
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Школа разработки искусственного интеллекта</h1>
+        <p class="lead">Ростов-на-Дону и онлайн. Для школьников и студентов. Сайт обновляется, но на звонок можно записаться уже сейчас.</p>
+        <div class="cta-row"><a class="btn btn-primary" href="#apply">Записаться на звонок</a></div>
+      </div>
+      <HeroFigure />
+    </div>
+  </section>
+  <OfferSection source="main-stub" />
 </main>
 </Base>
