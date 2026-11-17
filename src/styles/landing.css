@@ -31,7 +31,7 @@
 .lcase h2{color:#fff;max-width:18ch;margin-bottom:18px}
 .lcase .lead{color:rgba(255,255,255,.9);max-width:46ch;margin:0}
 .lcase .paper{margin:22px 0 0;font-size:14px;color:rgba(255,255,255,.7);max-width:56ch}
-.lcase .stamp{position:absolute;top:28px;right:16px;z-index:1;background:var(--blue);color:#fff;font-weight:700;font-size:14px;padding:10px 14px;border-radius:3px;line-height:1.2}
+.lcase .stamp{position:absolute;top:28px;right:16px;z-index:1;color:rgba(255,255,255,.85);font-weight:500;font-size:14px;padding:8px 12px;border:1px solid rgba(255,255,255,.45);border-radius:3px;line-height:1.2}
 @media(min-width:720px){.lcase .stamp{right:32px;top:36px;font-size:15px}}
 
 /* тёмная секция с задачами */
