@@ -6,7 +6,7 @@ const YKEY = import.meta.env.PUBLIC_YMAPS_KEY ?? "";
   <div class="wrap">
     <div class="sec-head">
       <p class="eyebrow">Где проводим занятия</p>
-      <h2>Два офиса в Ростове-на-Дону и&nbsp;онлайн для других городов</h2>
+      <h2>Офис в Ростове-на-Дону и&nbsp;онлайн для других городов</h2>
     </div>
     <div class="places-layout">
       <ul class="where where-grid">
@@ -15,18 +15,13 @@ const YKEY = import.meta.env.PUBLIC_YMAPS_KEY ?? "";
             <b>Ростов-на-Дону, офис на Надёжной</b>
             <span>ул. Надёжная, 82</span>
           </li>
-          <li class="place" data-ll="47.2167,39.6286">
-            <span class="where-mode">очно / онлайн</span>
-            <b>Ростов-на-Дону, мехмат ЮФУ</b>
-            <span>ул. Мильчакова, 8а, Институт математики, механики и компьютерных наук им. И. И. Воровича. Здесь мы преподаём</span>
-          </li>
           <li class="place">
             <span class="where-mode">онлайн</span>
             <b>Другие города</b>
             <span>Встречи, разборы и работа над задачей идут онлайн вместе с очной группой</span>
           </li>
         </ul>
-      <div id="map" class="map" data-ymaps={YKEY} role="img" aria-label="Карта: офис на ул. Надёжная, 82 и мехмат ЮФУ на ул. Мильчакова, 8а"></div>
+      <div id="map" class="map" data-ymaps={YKEY} role="img" aria-label="Карта: офис на ул. Надёжная, 82"></div>
     </div>
   </div>
 </section>
