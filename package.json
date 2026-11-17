@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "build": "astro build",
-    "preview": "astro preview --host 127.0.0.1 --port 8768"
+    "preview": "astro preview --host 127.0.0.1 --port 8768",
+    "build:public": "astro build && sh scripts/prune-dist.sh"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +16,8 @@
   "dependencies": {
     "astro": "^7.4.7",
     "leaflet": "^1.9.4"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
