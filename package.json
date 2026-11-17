@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
-    "build": "astro build",
+    "build": "astro build && sh scripts/prune-dist.sh",
     "preview": "astro preview --host 127.0.0.1 --port 8768",
-    "build:public": "astro build && sh scripts/prune-dist.sh"
+    "build:full": "astro build"
   },
   "keywords": [],
   "author": "",

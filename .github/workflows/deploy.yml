@@ -33,7 +33,7 @@ jobs:
           ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Prune dist to public pages
-        run: sh scripts/prune-dist.sh
+        run: echo "prune входит в npm run build"
 
       - name: Upload dist
         run: |
