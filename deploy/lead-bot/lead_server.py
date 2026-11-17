@@ -14,6 +14,9 @@ import html
 import http.client
 import socket
 import ssl
+import smtplib
+from email.message import EmailMessage
+from email.utils import formataddr
 import json, os, re, time, urllib.request, urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from collections import defaultdict, deque
@@ -23,6 +26,12 @@ CHAT_ID = os.environ.get("TG_CHAT_ID", "")
 MAX_TOKEN = os.environ.get("MAX_BOT_TOKEN", "")
 MAX_USER_ID = os.environ.get("MAX_USER_ID", "")
 MAX_API = "https://botapi.max.ru"
+SMTP_HOST = os.environ.get("SMTP_HOST", "")
+SMTP_PORT = int(os.environ.get("SMTP_PORT", "465"))
+SMTP_USER = os.environ.get("SMTP_USER", "")
+SMTP_PASS = os.environ.get("SMTP_PASS", "")
+MAIL_FROM = os.environ.get("MAIL_FROM", SMTP_USER)
+MAIL_TO = [x.strip() for x in os.environ.get("MAIL_TO", "").split(",") if x.strip()]
 LOG = os.environ.get("LEAD_LOG", "/var/lib/lamon/leads.jsonl")
 PORT = int(os.environ.get("LISTEN_PORT", "8081"))
 
@@ -133,8 +142,26 @@ def max_find_user() -> None:
         print("Обновлений нет: напишите боту любое сообщение в MAX и повторите.")
 
 
-def notify(text_html: str, text_md: str) -> dict:
-    return {"telegram": tg_send(text_html), "max": max_send(text_md)}
+def mail_send(subject: str, text: str) -> bool:
+    if not (SMTP_HOST and SMTP_USER and SMTP_PASS and MAIL_TO):
+        return False
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = formataddr(("Lamon заявки", MAIL_FROM))
+    msg["To"] = ", ".join(MAIL_TO)
+    msg.set_content(text)
+    try:
+        with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=15) as smtp:
+            smtp.login(SMTP_USER, SMTP_PASS)
+            smtp.send_message(msg)
+        return True
+    except Exception as e:  # noqa: BLE001
+        print("mail error:", e, flush=True)
+        return False
+
+
+def notify(text_html: str, text_md: str, plain: str = "", subject: str = "Новая заявка на lamon.school") -> dict:
+    return {"telegram": tg_send(text_html), "max": max_send(text_md), "mail": mail_send(subject, plain or text_md)}
 
 
 class H(BaseHTTPRequestHandler):
@@ -151,7 +178,7 @@ class H(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == "/api/lead/health":
-            return self._json(200, {"ok": True, "telegram": bool(TOKEN and CHAT_ID), "max": bool(MAX_TOKEN and MAX_USER_ID)})
+            return self._json(200, {"ok": True, "telegram": bool(TOKEN and CHAT_ID), "max": bool(MAX_TOKEN and MAX_USER_ID), "mail": bool(SMTP_HOST and SMTP_USER and SMTP_PASS and MAIL_TO)})
         self._json(404, {"ok": False})
 
     def do_POST(self):
@@ -184,6 +211,8 @@ class H(BaseHTTPRequestHandler):
         sent = notify(
             f"<b>Заявка</b> · {source or 'main'}{' · '+role if role else ''}\nИмя: {name}\nТелефон: <code>{phone}</code>{chr(10)+'О ситуации: '+html.escape(about) if about else ''}\nВремя: {rec['ts']}",
             f"**Заявка** · {source or 'main'}{' · '+role if role else ''}\nИмя: {name}\nТелефон: `{phone}`{chr(10)+'О ситуации: '+about if about else ''}\nВремя: {rec['ts']}",
+            plain=f"Имя: {name}\nТелефон: {phone}\nЛендинг: {source or 'main'}{chr(10)+'Роль: '+role if role else ''}{chr(10)+chr(10)+'О ситуации:'+chr(10)+about if about else ''}\n\nВремя: {rec['ts']}\nСтраница: {rec['page']}",
+            subject=f"Заявка lamon.school: {name}, {phone}",
         )
         print("lead:", rec, "sent:", sent, flush=True)
         self._json(200, {"ok": True, **sent})
@@ -196,5 +225,7 @@ if __name__ == "__main__":
     import sys
     if "--find-max-user" in sys.argv:
         max_find_user(); sys.exit(0)
-    print(f"lamon-lead on 127.0.0.1:{PORT}, telegram: {bool(TOKEN and CHAT_ID)}, max: {bool(MAX_TOKEN and MAX_USER_ID)}", flush=True)
+    if "--test-mail" in sys.argv:
+        print("mail:", mail_send("Проверка: заявки lamon.school", "Письма с заявками подключены. Это тестовое сообщение.")); sys.exit(0)
+    print(f"lamon-lead on 127.0.0.1:{PORT}, telegram: {bool(TOKEN and CHAT_ID)}, max: {bool(MAX_TOKEN and MAX_USER_ID)}, mail: {bool(SMTP_HOST and SMTP_USER and SMTP_PASS and MAIL_TO)}", flush=True)
     ThreadingHTTPServer(("127.0.0.1", PORT), H).serve_forever()
