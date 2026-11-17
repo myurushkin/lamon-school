@@ -50,8 +50,9 @@ export const team: TeamMember[] = [
     role: "Исследования в NLP",
     bio: "",
     regalia: [
+      "AI/ML-исследователь с 5-летним опытом",
       "аспирант мехмата ЮФУ",
-      "соавтор статьи на EMNLP 2026, Industry Track",
+      "автор статьи на EMNLP 2026, Industry Track",
     ],
     teaches: ["генеративный ИИ"],
     initials: "ИЧ",
