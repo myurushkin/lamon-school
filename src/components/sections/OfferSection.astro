@@ -1,7 +1,7 @@
 ---
 interface Props {
   eyebrow?: string; title?: string; lead?: string; button?: string; source?: string;
-  roles?: string[]; done?: string;
+  roles?: string[]; done?: string; about?: string;
 }
 const {
   eyebrow = "Запись",
@@ -11,6 +11,7 @@ const {
   source = "main",
   roles = [],
   done = "Спасибо! Заявка отправлена — мы свяжемся с вами в течение двух дней.",
+  about = "Пара слов о себе: где учитесь и что уже делали",
 } = Astro.props;
 ---
 <section class="sec" id="apply" data-done={done}>
@@ -38,7 +39,7 @@ const {
           <input name="phone" id="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" maxlength="18">
         </label>
         <label>Напишите о своей ситуации
-          <textarea name="about" maxlength="1000" placeholder="Пара слов о себе: где учитесь и что уже делали"></textarea>
+          <textarea name="about" maxlength="1000" placeholder={about}></textarea>
         </label>
         <button class="btn btn-primary" type="submit">{button}</button>
         <p class="form-note">Нажимая кнопку, вы соглашаетесь, что мы свяжемся с вами по указанному телефону. Данные никому не передаём.</p>
