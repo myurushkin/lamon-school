@@ -33,6 +33,39 @@ SMTP_PASS = os.environ.get("SMTP_PASS", "")
 MAIL_FROM = os.environ.get("MAIL_FROM", SMTP_USER)
 MAIL_TO = [x.strip() for x in os.environ.get("MAIL_TO", "").split(",") if x.strip()]
 LOG = os.environ.get("LEAD_LOG", "/var/lib/lamon/leads.jsonl")
+REJECT_LOG = os.environ.get("LEAD_REJECT_LOG", "/var/lib/lamon/leads_rejected.jsonl")
+MIN_SECONDS = int(os.environ.get("LEAD_MIN_SECONDS", "4"))  # быстрее человек форму не заполнит
+
+_LETTERS = re.compile(r"[A-Za-zА-Яа-яЁё]")
+
+
+def junk_reason(payload: dict, name: str, digits: str) -> str:
+    """Почему заявка похожа на бота; пустая строка — заявка настоящая."""
+    if str(payload.get("site", "")).strip():
+        return "honeypot"
+    letters = len(_LETTERS.findall(name))
+    other = len(re.sub(r"[A-Za-zА-Яа-яЁё\s\-']", "", name))
+    compact = len(re.sub(r"\s", "", name))
+    if letters < 2 or re.search(r"\d", name) or other > 1 or letters < compact * 0.6:
+        return "name"
+    tail = digits[1:]
+    if re.fullmatch(r"(\d)\1{9}", tail) or tail in "01234567890123456789" or tail in "09876543210987654321":
+        return "phone"
+    if not re.match(r"^7[3489]", digits):
+        return "phone"
+    try:
+        elapsed = int(payload.get("elapsed", -1))
+    except (TypeError, ValueError):
+        elapsed = -1
+    if 0 <= elapsed < MIN_SECONDS:
+        return f"fast:{elapsed}s"
+    try:
+        touched = int(payload.get("touched", -1))
+    except (TypeError, ValueError):
+        touched = -1
+    if touched == 0:
+        return "no-input"
+    return ""
 PORT = int(os.environ.get("LISTEN_PORT", "8081"))
 
 _hits = defaultdict(deque)  # простая защита от флуда: не больше 5 заявок с IP за 10 минут
@@ -200,12 +233,18 @@ class H(BaseHTTPRequestHandler):
         digits = re.sub(r"\D", "", phone)
         if not name or len(digits) != 11:
             return self._json(400, {"ok": False, "error": "Нужны имя и полный номер телефона."})
-        honeypot = str(payload.get("site", "")).strip()
-        if honeypot:  # поле, которое человек не заполняет
-            return self._json(200, {"ok": True})
         rec = {"ts": time.strftime("%Y-%m-%d %H:%M:%S"), "name": name, "phone": phone, "source": source, "role": role, "about": about, "ip": ip,
                "ua": self.headers.get("User-Agent", "")[:160], "page": self.headers.get("Referer", "")[:200]}
         os.makedirs(os.path.dirname(LOG), exist_ok=True)
+        # антибот: мусорные заявки не пишем в основной лог и не считаем целью (клиент шлёт цель только при accepted=True).
+        # Боту отвечаем «ok», чтобы не подсказывать, что его отсеяли.
+        reason = junk_reason(payload, name, digits)
+        if reason:
+            rec["reason"] = reason
+            with open(REJECT_LOG, "a", encoding="utf-8") as f:
+                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+            print("rejected:", reason, rec, flush=True)
+            return self._json(200, {"ok": True, "accepted": False})
         with open(LOG, "a", encoding="utf-8") as f:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
         sent = notify(
@@ -215,7 +254,7 @@ class H(BaseHTTPRequestHandler):
             subject=f"Заявка lamon.school: {name}, {phone}",
         )
         print("lead:", rec, "sent:", sent, flush=True)
-        self._json(200, {"ok": True, **sent})
+        self._json(200, {"ok": True, "accepted": True, **sent})
 
     def log_message(self, *_):  # тише в journal
         pass

@@ -87,6 +87,23 @@ const {
   });
   const form = document.getElementById('form') as HTMLFormElement | null;
   const btn0 = form?.querySelector('button[type=submit]') as HTMLButtonElement | null;
+  // защита от ботов: время от загрузки до отправки и факт живого ввода
+  const t0 = Date.now();
+  let touched = 0;
+  form?.addEventListener('keydown', () => { touched++; });
+  form?.addEventListener('pointerdown', () => { touched++; });
+  // имя: минимум две буквы, без цифр, буквы составляют основную часть
+  const nameLooksReal = (n: string) => {
+    const letters = (n.match(/[A-Za-zА-Яа-яЁё]/g) || []).length;
+    const other = n.replace(/[A-Za-zА-Яа-яЁё\s\-']/g, '').length;
+    return letters >= 2 && !/\d/.test(n) && other <= 1 && letters >= n.replace(/\s/g,'').length * 0.6;
+  };
+  const phoneLooksReal = (d: string) => {
+    const tail = d.slice(1);
+    if(/^(\d)\1{9}$/.test(tail)) return false;            // 9999999999
+    if('01234567890123456789'.includes(tail) || '09876543210987654321'.includes(tail)) return false;
+    return /^7[3489]/.test(d);                               // российский мобильный/городской код
+  };
   form?.addEventListener('submit', async (ev)=>{
     ev.preventDefault();
     const f = new FormData(form);
@@ -96,17 +113,21 @@ const {
     const btnText = btn0?.textContent || '';
     const digits = phone.replace(/\D/g,'');
     const phoneEl = document.getElementById('phone') as HTMLInputElement | null;
-    phoneEl?.setCustomValidity(digits.length === 11 ? '' : 'Введите номер полностью: +7 (XXX) XXX-XX-XX');
-    if(!name || !phone || digits.length !== 11){ form.reportValidity(); return; }
+    const nameEl = form.querySelector('input[name=name]') as HTMLInputElement | null;
+    nameEl?.setCustomValidity(nameLooksReal(name) ? '' : 'Напишите имя буквами');
+    phoneEl?.setCustomValidity(digits.length === 11 && phoneLooksReal(digits) ? '' : 'Введите настоящий номер: +7 (XXX) XXX-XX-XX');
+    if(!nameLooksReal(name) || !phone || digits.length !== 11 || !phoneLooksReal(digits)){ form.reportValidity(); return; }
+    const elapsed = Math.round((Date.now() - t0) / 1000);
     const btn = btn0;
     const ok = document.getElementById('ok');
     if(btn){ btn.disabled = true; btn.textContent = 'Отправляем…'; }
     try {
-      const r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, site, source, role, about }) });
+      const r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, site, source, role, about, elapsed, touched }) });
       const data = await r.json().catch(() => ({}));
       if(!r.ok || !data.ok) throw new Error(data.error || 'Не удалось отправить');
       if(ok){ ok.textContent = doneText; ok.style.display = 'block'; }
-      try { if(typeof window.ym === 'function') window.ym(114311096, 'reachGoal', 'lead', { source, role }); } catch (_) {}
+      // цель в Метрику только если сервер принял заявку как настоящую
+      try { if(data.accepted && typeof window.ym === 'function') window.ym(114311096, 'reachGoal', 'lead', { source, role }); } catch (_) {}
       form.reset();
       if(btn){ btn.textContent = 'Заявка отправлена'; }
     } catch (e) {
