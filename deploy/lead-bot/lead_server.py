@@ -37,6 +37,8 @@ REJECT_LOG = os.environ.get("LEAD_REJECT_LOG", "/var/lib/lamon/leads_rejected.js
 MIN_SECONDS = int(os.environ.get("LEAD_MIN_SECONDS", "4"))  # быстрее человек форму не заполнит
 
 _LETTERS = re.compile(r"[A-Za-zА-Яа-яЁё]")
+REASONS = {"honeypot": "заполнено скрытое поле", "name": "имя не похоже на имя", "phone": "телефон из повторов или не российский",
+           "fast": "форма отправлена быстрее 4 секунд", "no-input": "отправка без ввода с клавиатуры/касаний"}
 
 
 def junk_reason(payload: dict, name: str, digits: str) -> str:
@@ -244,6 +246,13 @@ class H(BaseHTTPRequestHandler):
             with open(REJECT_LOG, "a", encoding="utf-8") as f:
                 f.write(json.dumps(rec, ensure_ascii=False) + "\n")
             print("rejected:", reason, rec, flush=True)
+            # Михаил просил присылать и такие — с пометкой, чтобы не тратить время на звонок
+            mail_send(
+                f"Похоже на накрутку: {name}, {phone}",
+                f"ПОХОЖЕ НА НАКРУТКУ (причина: {REASONS.get(reason.split(':')[0], reason)}). Цель в Метрике не засчитана, в основной лог не записана.\n\n"
+                f"Имя: {name}\nТелефон: {phone}\nЛендинг: {source or 'main'}{chr(10)+'Роль: '+role if role else ''}{chr(10)+chr(10)+'О ситуации:'+chr(10)+about if about else ''}\n\n"
+                f"Время: {rec['ts']}\nСтраница: {rec['page']}\nУстройство: {rec['ua']}\nIP: {ip}",
+            )
             return self._json(200, {"ok": True, "accepted": False})
         with open(LOG, "a", encoding="utf-8") as f:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
